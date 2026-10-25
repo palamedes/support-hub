@@ -153,8 +153,8 @@ methods:
   # Just the username, without the @. The link and QR code are made from it.
   - type: venmo
     label: Venmo
-    enabled: false   # switched off until you fill it in
-    handle: "<<YOUR-VENMO-USERNAME>>"
+    enabled: true
+    handle: Palamedes
 
   # Just the cashtag, without the $.
   - type: cashapp
