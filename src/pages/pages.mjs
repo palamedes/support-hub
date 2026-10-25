@@ -72,7 +72,7 @@ export function homePage(cfg) {
 
 export function supportPage(cfg, qr) {
   const body = `
-<div class="card-panel">
+<div class="card-panel support-page">
   <p class="from-note" id="from-note" hidden></p>
   <p class="lead">${esc(cfg.brand.pitch)}</p>
   ${paysFor(cfg)}

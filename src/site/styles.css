@@ -211,6 +211,14 @@ main { padding-bottom: 2.5rem; }
   background: var(--badge-bg); color: var(--badge-fg); font-size: .72rem; font-weight: 700;
 }
 .fine { margin: 1.25rem 0 0; color: var(--muted); font-size: .85rem; }
+/* The support page lays everything out down the middle. */
+.support-page { text-align: center; }
+.support-page .methods { display: flex; flex-wrap: wrap; justify-content: center; margin-inline: auto; }
+.support-page .method { flex: 0 1 240px; }
+.support-page .method.wide { flex-basis: 100%; }
+.support-page .m-head, .support-page .row, .support-page .with-qr { justify-content: center; }
+.support-page .with-qr .m-main { flex: 0 1 460px; }
+.support-page .from-note { display: inline-block; }
 .demo-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0 .5rem; }
 .support-cta { margin: 1.25rem 0 .25rem; text-align: center; }
 .btn.big-support { gap: .6rem; min-width: 220px; min-height: 54px; padding: .7rem 2.5rem; font-size: 1.15rem; }
