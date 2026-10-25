@@ -94,7 +94,11 @@ export async function build({
   const loaded = loadConfigFile(configFile);
   const { errors, warnings, config: cfg } = loaded.errors
     ? { errors: loaded.errors, warnings: [], config: null }
-    : validateConfig(loaded.raw, { production, screenshotsDir: path.join(ROOT, 'screenshots') });
+    : validateConfig(loaded.raw, {
+      production,
+      screenshotsDir: path.join(ROOT, 'screenshots'),
+      imagesDir: path.join(ROOT, 'images'),
+    });
 
   for (const w of warnings) log(color.yellow(`  warning: ${w}`));
   if (errors.length) {
@@ -143,6 +147,11 @@ export async function build({
   write(dist, 'hub.js', await minify(path.join(ROOT, 'src/site/hub.js'), 'js'));
   write(dist, 'favicon.svg', fs.readFileSync(path.join(ROOT, 'src/site/favicon.svg')));
   write(dist, 'robots.txt', 'User-agent: *\nDisallow: /demo/\nDisallow: /thanks/\n');
+  write(dist, 'fonts/nunito-sans.woff2', fs.readFileSync(path.join(ROOT,
+    'node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-normal.woff2')));
+  for (const file of [cfg.brand.portrait, cfg.brand.footer_photo].filter(Boolean)) {
+    write(dist, `images/${file}`, fs.readFileSync(path.join(ROOT, 'images', file)));
+  }
   for (const t of cfg.tools.filter((x) => x.screenshot)) {
     write(dist, `screenshots/${t.screenshot}`, fs.readFileSync(path.join(ROOT, 'screenshots', t.screenshot)));
   }

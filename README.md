@@ -51,16 +51,24 @@ site; refresh the browser to see the change.
 
 `config.yml` is commented line by line, so it's the best guide. In short:
 
-- **site**: the hub's address and title. Leave these alone.
+- **site**: the hub's address, the name in the header, and the title in the
+  browser tab. Leave these alone.
 - **brand**: your name, the "aka" line, the short intro, the pitch next to the
-  support options, what tips pay for, and the not-tax-deductible note.
+  support options, what tips pay for, and the not-tax-deductible note. It also
+  holds the look borrowed from randomstringofwords.com:
+  - `portrait` and `footer_photo`: the two photos, from the `images/` folder.
+  - `footer_about`: the "About Me" text in the footer.
+  - `social`: the icons in the header and footer, in order. The heart that
+    links to the support page is added at the end automatically. Available
+    icons: facebook, twitter, linkedin, github, youtube, patreon.
 - **thanks**: the thank-you note a tool can show after something works (see
   [the widget](#the-thank-you-note)). `interval_days` is how long to wait
   before showing it again for the same tool.
 - **tools**: one entry per tool. See [Adding a new tool](#adding-a-new-tool-to-the-hub).
 - **methods**: the ways to support, in the order they appear.
-  - `primary: true` puts a method up front. Everything else sits behind
-    "More ways to support". Two or three primary methods is plenty.
+  - `primary: true` puts a method in the top group. Everything else follows
+    under "Other ways to support". Both the widget and the support page show
+    every method; two or three primary ones keeps the top group easy to scan.
   - `enabled: false` hides a method everywhere.
 
 **Placeholders** look like `<<YOUR-KOFI-NAME>>`. Every method that still has
@@ -329,10 +337,12 @@ don't show up on the public blockchain the same way.
 
 - The widget sets no cookies, has no tracking and no analytics, and needs no
   account or login.
-- It makes no requests of its own. When someone opens "More ways to support",
-  it loads QR code images from the hub, which is the same site the widget
-  came from. Ko-fi, Stripe and the others are only contacted when someone
-  clicks their link.
+- It makes no requests of its own. QR codes sit behind a "QR code" button,
+  and each one loads from the hub (the same site the widget came from) only
+  when someone presses it. Ko-fi, Stripe and the others are only contacted
+  when someone clicks their link.
+- The hub's font (Nunito Sans, the same one the blog uses) is served from the
+  hub itself, not from Google, so visiting the hub contacts nobody else.
 - The widget's styles sit in a Shadow DOM, so the tool's page and the widget
   can't break each other's looks.
 - The hub has a clearly marked spot for an optional, cookie-free visit counter
@@ -360,6 +370,7 @@ that too.
 ```
 config.yml            ← the one file you edit
 screenshots/          ← one image per tool
+images/               ← your portrait and footer photo
 src/widget/           ← the widget: widget.js, its styles, and the thank-you note's memory
 src/pages/            ← the hub's pages
 src/site/             ← the hub's stylesheet, its one small script, and the icon

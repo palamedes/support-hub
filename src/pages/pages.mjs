@@ -1,18 +1,18 @@
 // Every page on the hub. Each function returns { path, file, html }.
 
 import { layout } from './layout.mjs';
-import { esc, paysFor, screenshot, supportOptions } from './parts.mjs';
+import { esc, heading, paysFor, screenshot, supportOptions } from './parts.mjs';
 
 const toolData = (cfg) => ({
   tools: Object.fromEntries(cfg.tools.map((t) => [t.id, { name: t.name, thanks_text: t.thanks_text }])),
 });
 
 function toolCard(tool) {
-  return `<article class="card">
-  ${screenshot(tool)}
+  return `<article class="tool-card">
+  ${screenshot(tool, 'card-image')}
   <div class="card-body">
-    <h3>${esc(tool.name)}</h3>
-    ${tool.description ? `<p>${esc(tool.description)}</p>` : ''}
+    <h3 class="card-title">${esc(tool.name)}</h3>
+    ${tool.description ? `<p class="card-excerpt">${esc(tool.description)}</p>` : ''}
     <p class="card-links">
       <a class="btn pay" href="${esc(tool.url)}">Open ${esc(tool.name)}</a>
       ${tool.page ? `<a href="/tools/${esc(tool.id)}/">More about ${esc(tool.name)}</a>` : ''}
@@ -21,36 +21,49 @@ function toolCard(tool) {
 </article>`;
 }
 
+function homeHero(cfg) {
+  const { brand, site } = cfg;
+  return `<section class="home-hero">
+  <div class="hero-inner">
+    ${brand.portrait ? `<img class="profile-image" src="/images/${esc(brand.portrait)}" width="250" height="250" alt="${esc(brand.name)}">` : ''}
+    <div class="hero-text">
+      <h1 class="hero-name">${esc(brand.name)}</h1>
+      <p class="hero-site-name">${esc(site.name)}</p>
+      ${brand.also_known_as.length ? `<p class="hero-aka">aka ${brand.also_known_as.map(esc).join(' · ')}</p>` : ''}
+      ${brand.intro ? `<p class="hero-tagline">${esc(brand.intro)}</p>` : ''}
+    </div>
+  </div>
+</section>`;
+}
+
 export function homePage(cfg) {
   const { brand } = cfg;
   const body = `
-<section class="hero">
-  <h1>Free tools by ${esc(brand.name)}</h1>
-  ${brand.intro ? `<p class="lead">${esc(brand.intro)}</p>` : ''}
-  ${brand.about_url ? `<p><a href="${esc(brand.about_url)}">More about me</a></p>` : ''}
-</section>
-
 <section id="tools" aria-labelledby="tools-title">
-  <h2 id="tools-title">Tools</h2>
+  ${heading('Tools', 'tools-title')}
   ${cfg.tools.length
-    ? `<div class="cards">${cfg.tools.map(toolCard).join('\n')}</div>`
+    ? `<div class="tool-grid">${cfg.tools.map(toolCard).join('\n')}</div>`
     : '<p>The first tools are on their way.</p>'}
 </section>
 
-<section id="support" class="support-box" aria-labelledby="support-title">
-  <h2 id="support-title">Support the tools</h2>
-  <p>${esc(brand.pitch)}</p>
-  ${paysFor(cfg)}
-  ${supportOptions({ ...cfg, methods: cfg.methods.filter((m) => m.primary) })}
-  <p><a href="/support/">See every way to support</a></p>
+<section id="support" aria-labelledby="support-title">
+  ${heading('Support the tools', 'support-title')}
+  <div class="card-panel">
+    <p>${esc(brand.pitch)}</p>
+    ${paysFor(cfg)}
+    ${supportOptions(cfg, { primaryOnly: true })}
+  </div>
+  <div class="view-more"><a href="/support/">See every way to support</a></div>
 </section>`;
   return {
     path: '/',
     file: 'index.html',
     html: layout(cfg, {
       title: cfg.site.title,
+      section: 'Home',
       description: `Free tools by ${brand.name}, with no ads, watermarks or locked features, and an optional way to leave a tip.`,
       path: '/',
+      hero: homeHero(cfg),
       body,
     }),
   };
@@ -58,17 +71,19 @@ export function homePage(cfg) {
 
 export function supportPage(cfg, qr) {
   const body = `
-<h1>Support the tools</h1>
-<p class="from-note" id="from-note" hidden></p>
-<p class="lead">${esc(cfg.brand.pitch)}</p>
-${paysFor(cfg)}
-${supportOptions(cfg, { qr })}
-<p class="fine">${esc(cfg.brand.tax_note)}</p>`;
+<div class="card-panel">
+  <p class="from-note" id="from-note" hidden></p>
+  <p class="lead">${esc(cfg.brand.pitch)}</p>
+  ${paysFor(cfg)}
+  ${supportOptions(cfg, { qr })}
+  <p class="fine">${esc(cfg.brand.tax_note)}</p>
+</div>`;
   return {
     path: '/support/',
     file: 'support/index.html',
     html: layout(cfg, {
       title: 'Support',
+      heading: 'Support the tools',
       description: `Every way to leave a tip for ${cfg.brand.name}'s free tools: card, Ko-fi, Patreon and more. Always optional.`,
       path: '/support/',
       body,
@@ -81,23 +96,27 @@ ${supportOptions(cfg, { qr })}
 export function toolPage(cfg, tool, qr) {
   const body = `
 <p class="crumbs"><a href="/#tools">All tools</a></p>
-<h1>${esc(tool.name)}</h1>
-${tool.description ? `<p class="lead">${esc(tool.description)}</p>` : ''}
-${screenshot(tool)}
-<p><a class="btn pay" href="${esc(tool.url)}">Open ${esc(tool.name)}</a></p>
+<div class="card-panel">
+  ${tool.description ? `<p class="lead">${esc(tool.description)}</p>` : ''}
+  ${screenshot(tool)}
+  <p><a class="btn pay" href="${esc(tool.url)}">Open ${esc(tool.name)}</a></p>
+</div>
 
-<section class="support-box" aria-labelledby="support-title">
-  <h2 id="support-title">Support ${esc(tool.name)}</h2>
-  <p>${esc(tool.thanks_text || cfg.brand.pitch)}</p>
-  ${paysFor(cfg)}
-  ${supportOptions(cfg, { toolId: tool.id, qr })}
-  <p class="fine">${esc(cfg.brand.tax_note)}</p>
+<section aria-labelledby="support-title">
+  ${heading(`Support ${tool.name}`, 'support-title')}
+  <div class="card-panel">
+    <p>${esc(tool.thanks_text || cfg.brand.pitch)}</p>
+    ${paysFor(cfg)}
+    ${supportOptions(cfg, { toolId: tool.id, qr })}
+    <p class="fine">${esc(cfg.brand.tax_note)}</p>
+  </div>
 </section>`;
   return {
     path: `/tools/${tool.id}/`,
     file: `tools/${tool.id}/index.html`,
     html: layout(cfg, {
       title: tool.name,
+      section: 'Tools',
       description: tool.description || `${tool.name}, a free tool by ${cfg.brand.name}.`,
       path: `/tools/${tool.id}/`,
       body,
@@ -108,17 +127,17 @@ ${screenshot(tool)}
 
 export function thanksPage(cfg) {
   const body = `
-<section class="hero">
-  <h1>Thank you!</h1>
+<div class="card-panel">
   <p class="lead">Your tip went through. It keeps these tools free and running, and it pays for
   the next one. I really appreciate it.</p>
   <p><a href="/#tools">Back to the tools</a></p>
-</section>`;
+</div>`;
   return {
     path: '/thanks/',
     file: 'thanks/index.html',
     html: layout(cfg, {
       title: 'Thank you',
+      heading: 'Thank you!',
       description: 'Thanks for the tip.',
       path: '/thanks/',
       body,
@@ -134,21 +153,22 @@ export function demoPage(cfg) {
 `<script>window.supportHub=window.supportHub||function(){(supportHub.q=supportHub.q||[]).push(arguments)}</script>
 <script async src="${cfg.site.url}/widget.js" data-tool="${id}"></script>`;
   const body = `
-<h1>Widget demo</h1>
-<p class="lead">This plain page loads the Support widget the same way a tool would.
-The quiet <strong>Support</strong> button is in the bottom-right corner.</p>
+<div class="card-panel">
+  <p class="lead">This page loads the Support widget the same way a tool would.
+  The quiet <strong>Support</strong> button is in the bottom-right corner.</p>
 
-<div class="demo-actions">
-  <button type="button" class="btn pay" id="demo-open">Open the panel</button>
-  <button type="button" class="btn" id="demo-thanks">Show the thank-you note</button>
-  <button type="button" class="btn" id="demo-reset">Reset the note's memory</button>
+  <div class="demo-actions">
+    <button type="button" class="btn pay" id="demo-open">Open the panel</button>
+    <button type="button" class="btn" id="demo-thanks">Show the thank-you note</button>
+    <button type="button" class="btn" id="demo-reset">Reset the note's memory</button>
+  </div>
+  <p class="fine" id="demo-result" role="status"></p>
+
+  <h2>The snippet</h2>
+  <pre><code>${esc(snippet)}</code></pre>
+  <p>The thank-you note shows at most once every ${cfg.thanks.interval_days} days per tool, so use
+  <em>Reset</em> to see it again.</p>
 </div>
-<p class="fine" id="demo-result" role="status"></p>
-
-<h2>The snippet</h2>
-<pre><code>${esc(snippet)}</code></pre>
-<p>The thank-you note shows at most once every ${cfg.thanks.interval_days} days per tool, so use
-<em>Reset</em> to see it again.</p>
 
 <script>window.supportHub=window.supportHub||function(){(supportHub.q=supportHub.q||[]).push(arguments)}</script>
 <script async src="/widget.js" data-tool="${esc(id)}"></script>
@@ -180,16 +200,16 @@ The quiet <strong>Support</strong> button is in the bottom-right corner.</p>
 
 export function notFoundPage(cfg) {
   const body = `
-<section class="hero">
-  <h1>Page not found</h1>
+<div class="card-panel">
   <p class="lead">That page isn't here. It may have moved.</p>
   <p><a href="/">Go to the home page</a></p>
-</section>`;
+</div>`;
   return {
     path: '/404.html',
     file: '404.html',
     html: layout(cfg, {
       title: 'Not found',
+      heading: 'Page not found',
       description: 'Page not found.',
       path: '/404.html',
       body,

@@ -18,6 +18,9 @@
 site:
   # The hub's address, with no slash at the end.
   url: https://jasonellisbuilds.com
+  # Shown top-left in the header.
+  name: JasonEllisBuilds.com
+  # Shown in the browser tab and in search results.
   title: Jason Ellis Builds
   # Optional, cookie-free visit counter. Off by default. Paste the snippet your
   # counter gives you (for example GoatCounter or Cloudflare Web Analytics)
@@ -33,6 +36,30 @@ brand:
     tools for problems I run into myself. They stay free: no ads, no
     watermarks, nothing locked.
   about_url: https://randomstringofwords.com/about/
+  blog_url: https://randomstringofwords.com/
+  # Photos from the images/ folder: the portrait at the top of the home page
+  # and the smaller photo in the footer.
+  portrait: portrait.webp
+  footer_photo: footer-photo.jpg
+  # The "About Me" text in the footer.
+  footer_about: >-
+    Hey everyone! Glad to see you here. These are the tools I build in my spare
+    time, for problems I run into myself. They're free, and they'll stay that
+    way. If you want to know who's behind them, there's a lot more on my blog.
+  # The icons in the header and footer, in this order. A heart that links to
+  # the support page is added at the end automatically.
+  # Icons available: facebook, twitter, linkedin, github, youtube, patreon
+  social:
+    - type: facebook
+      url: https://www.facebook.com/jason.r.ellis
+    - type: twitter
+      url: https://twitter.com/JasonEllis72
+    - type: linkedin
+      url: https://www.linkedin.com/in/jasonellis
+    - type: github
+      url: https://github.com/palamedes
+    - type: youtube
+      url: https://www.youtube.com/c/JasonEllisBuilds/
   # The line people see next to the support options.
   pitch: >-
     These tools are free and always will be. If one saved you time, you can
@@ -78,9 +105,9 @@ tools:
       time, you can leave a tip.
 
 # ── Ways to support ──────────────────────────────────────────────────────
-#  Listed in the order they appear. `primary: true` shows a method up front;
-#  the rest sit behind "More ways to support". Keep it to two or three
-#  primary methods so nobody faces a wall of buttons.
+#  Listed in the order they appear. `primary: true` puts a method in the top
+#  group; the rest follow under "Other ways to support". Two or three primary
+#  methods keeps the top group easy to scan.
 #  `enabled: false` hides a method everywhere. Every method below that still
 #  has a placeholder starts switched off: fill it in, then set enabled: true.
 methods:

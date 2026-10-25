@@ -28,6 +28,16 @@ const NEEDS_HELP = {
 };
 
 const TOP_LEVEL = ['site', 'brand', 'thanks', 'tools', 'methods'];
+
+// Icons the header and footer know how to draw.
+export const SOCIAL_TYPES = {
+  facebook: 'Facebook',
+  twitter: 'Twitter',
+  linkedin: 'LinkedIn',
+  github: 'GitHub',
+  youtube: 'YouTube',
+  patreon: 'Patreon',
+};
 const TOOL_ID = /^[a-z0-9][a-z0-9-]{0,63}$/;
 
 export function loadConfigFile(file) {
@@ -104,6 +114,35 @@ export function validateConfig(raw, opts = {}) {
   for (const k of ['name', 'intro', 'pitch', 'tax_note', 'about_url']) checkText(`brand → ${k}`, brand[k]);
   if (brand.about_url && !PLACEHOLDER.test(str(brand.about_url)) && !isHttpUrl(str(brand.about_url))) {
     errors.push(`brand → about_url "${brand.about_url}" isn't a web address.`);
+  }
+  const blogUrl = str(brand.blog_url);
+  if (blogUrl && !PLACEHOLDER.test(blogUrl) && !isHttpUrl(blogUrl)) errors.push(`brand → blog_url "${blogUrl}" isn't a web address.`);
+  checkText('brand → footer_about', brand.footer_about);
+  const photo = (key) => {
+    const file = str(brand[key]);
+    if (file && opts.imagesDir && !fs.existsSync(path.join(opts.imagesDir, file))) {
+      errors.push(`brand → ${key}: "${file}" isn't in the images folder. Check the file name, or remove the line.`);
+    }
+    return file || null;
+  };
+  const portrait = photo('portrait');
+  const footerPhoto = photo('footer_photo');
+  const social = [];
+  if (brand.social != null && !Array.isArray(brand.social)) {
+    errors.push('brand → social should be a list, each with a type and a url.');
+  } else {
+    (brand.social || []).forEach((item, i) => {
+      const type = str(item?.type).toLowerCase();
+      const url = str(item?.url);
+      const where = `brand → social → ${type || `number ${i + 1}`}`;
+      if (!SOCIAL_TYPES[type]) {
+        errors.push(`${where}: "${type}" isn't an icon this hub has. Use one of: ${Object.keys(SOCIAL_TYPES).join(', ')}.`);
+      } else if (!url || !isHttpUrl(url)) {
+        errors.push(`${where} needs a url, starting with https://`);
+      } else {
+        social.push({ type, url, label: SOCIAL_TYPES[type] });
+      }
+    });
   }
   const aka = Array.isArray(brand.also_known_as) ? brand.also_known_as.map(str).filter(Boolean)
     : str(brand.also_known_as) ? [str(brand.also_known_as)] : [];
@@ -205,12 +244,22 @@ export function validateConfig(raw, opts = {}) {
     errors,
     warnings,
     config: errors.length ? null : {
-      site: { url: siteUrl, title: str(site.title) || str(brand.name), analytics_snippet: str(site.analytics_snippet) },
+      site: {
+        url: siteUrl,
+        name: str(site.name) || (isHttpUrl(siteUrl) ? new URL(siteUrl).host : str(brand.name)),
+        title: str(site.title) || str(brand.name),
+        analytics_snippet: str(site.analytics_snippet),
+      },
       brand: {
         name: str(brand.name),
         also_known_as: aka,
         intro: str(brand.intro),
         about_url: str(brand.about_url) || null,
+        blog_url: blogUrl || null,
+        portrait,
+        footer_photo: footerPhoto,
+        footer_about: str(brand.footer_about),
+        social,
         pitch: str(brand.pitch),
         pays_for: paysFor,
         tax_note: str(brand.tax_note),

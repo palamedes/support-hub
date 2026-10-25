@@ -3,7 +3,9 @@
   "private": true,
   "description": "One support hub and a tiny embeddable Support button for all of Jason Ellis's free tools.",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:prod": "node scripts/build.mjs --production",
@@ -14,6 +16,7 @@
     "test:all": "npm test && npm run test:e2e"
   },
   "devDependencies": {
+    "@fontsource-variable/nunito-sans": "5.3.0",
     "@playwright/test": "1.64.0",
     "esbuild": "0.28.2",
     "qrcode": "1.5.4",

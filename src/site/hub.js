@@ -42,9 +42,4 @@
       note.hidden = false;
     }
   }
-
-  if (location.hash === '#more') {
-    var more = document.getElementById('more');
-    if (more) more.open = true;
-  }
 })();

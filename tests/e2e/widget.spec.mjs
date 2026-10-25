@@ -90,21 +90,39 @@ test.describe('the panel', () => {
     await expect(dialog).toBeHidden();
   });
 
-  test('"More ways to support" opens by keyboard and only then loads the QR codes, from the hub', async ({ page }) => {
+  test('shows every way to support at once, with no "More ways" step', async ({ page }) => {
+    await openHost(page, hostPage());
+    await ready(page);
+    await page.evaluate(() => supportHub('open'));
+    const dialog = page.getByRole('dialog');
+    for (const name of ['$5', 'Ko-fi', 'Venmo']) {
+      await expect(dialog.getByRole('link', { name: new RegExp(name.replace('$', '\\$')) }).first()).toBeVisible();
+    }
+    await expect(dialog.getByText('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4')).toBeVisible();
+    await expect(dialog.getByText('tips@example.com')).toBeVisible();
+    await expect(dialog.getByRole('button', { name: /More ways/ })).toHaveCount(0);
+  });
+
+  test('a QR code opens by keyboard, and only then loads, from the hub', async ({ page }) => {
     const requests = [];
     page.on('request', (r) => requests.push(r.url()));
     await openHost(page, hostPage());
     await ready(page);
     await page.evaluate(() => supportHub('open'));
     expect(requests.some((u) => u.includes('/qr/'))).toBe(false);
+    await expect(page.getByRole('img', { name: 'QR code for Venmo' })).toBeHidden();
 
-    const toggle = page.getByRole('button', { name: 'More ways to support' });
+    const toggle = page.getByRole('button', { name: 'QR code for Venmo' });
     await toggle.focus();
     await page.keyboard.press('Enter');
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(page.getByRole('img', { name: 'QR code for Venmo' })).toBeVisible();
     expect(requests.some((u) => u === `${ORIGIN}/qr/venmo.svg`)).toBe(true);
+    expect(requests.some((u) => u.includes('/qr/bitcoin.svg'))).toBe(false); // only the one asked for
     expect(requests.every((u) => u.startsWith(ORIGIN + '/'))).toBe(true);
+
+    await page.keyboard.press('Enter');
+    await expect(page.getByRole('img', { name: 'QR code for Venmo' })).toBeHidden();
   });
 
   test('tags Stripe links with the tool so the payment records where it came from', async ({ page }) => {
@@ -260,8 +278,8 @@ test.describe('when things go wrong', () => {
     await openHost(page, hostPage());
     await ready(page);
     await page.evaluate(() => supportHub('open'));
-    await page.getByRole('button', { name: 'More ways to support' }).click();
-    await expect(page.getByRole('img', { name: 'QR code for Venmo' })).toBeVisible();
+    for (const toggle of await page.locator('.qr-toggle').all()) await toggle.click();
+    await expect(page.getByRole('img', { name: 'QR code for Bitcoin' })).toBeVisible();
     await page.keyboard.press('Escape');
     await page.click('#tool-button');
     await expect(page.getByRole('region', { name: /A note from/ })).toBeVisible();
@@ -281,7 +299,7 @@ test.describe('the hub site', () => {
   test('copy buttons copy the address', async ({ browser }) => {
     const context = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'] });
     const page = await context.newPage();
-    await page.goto(`${ORIGIN}/support/#more`);
+    await page.goto(`${ORIGIN}/support/`);
     const bitcoin = page.locator('.method', { hasText: 'Bitcoin' }).first();
     await bitcoin.getByRole('button', { name: 'Copy address' }).click();
     await expect(bitcoin.getByRole('button', { name: 'Copied' })).toBeVisible();

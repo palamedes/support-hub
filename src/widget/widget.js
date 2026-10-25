@@ -5,7 +5,7 @@
 // It adds a quiet "Support" button and a panel listing the ways to support.
 // Styles live in a Shadow DOM so the widget and the host page can't break
 // each other. It sets no cookies, tracks nothing, and makes no requests
-// except for QR images from the hub when someone opens "More ways to support".
+// except for a QR image from the hub when someone asks to see one.
 // Everything is wrapped so a failure here can never break the host tool.
 
 import css from './widget.css';
@@ -35,7 +35,7 @@ const CONFIG = __SUPPORT_CONFIG__;
   const store = createStore(() => window.localStorage);
 
   let layer; // shadow root for the panel and the note
-  let panel, backdrop, toast, more, moreToggle, live;
+  let panel, backdrop, toast, live;
   let isOpen = false;
   let lastFocus = null;
   let fadeTimer = 0;
@@ -72,7 +72,7 @@ const CONFIG = __SUPPORT_CONFIG__;
   function renderMethod(m) {
     if (m.type === 'stripe') {
       const s = m.stripe;
-      let html = `<div class="method"><div class="m-head">${esc(m.label)}${badge(m)}</div>`;
+      let html = `<div class="method wide"><div class="m-head">${esc(m.label)}${badge(m)}</div>`;
       if (s.one_time.length || s.choose_your_own_url) {
         html += `<div class="row"><span class="row-label">One-time</span>${amounts(s.one_time, '')}` +
           (s.choose_your_own_url ? link(tagStripe(s.choose_your_own_url), 'Other amount', 'btn') : '') + '</div>';
@@ -82,17 +82,27 @@ const CONFIG = __SUPPORT_CONFIG__;
       }
       return html + '</div>';
     }
+    // QR codes stay out of the way behind a button, and load only when asked.
+    const qrId = 'sh-qr-' + m.type;
+    const qrButton = m.qr
+      ? `<button type="button" class="btn qr-toggle" aria-expanded="false" aria-controls="${qrId}" ` +
+        `aria-label="QR code for ${esc(m.label)}">QR code</button>`
+      : '';
     const qr = m.qr
-      ? `<img class="qr" data-src="${esc(base)}qr/${m.type}.svg" width="112" height="112" alt="QR code for ${esc(m.label)}">`
+      ? `<img id="${qrId}" class="qr" data-src="${esc(base)}qr/${m.type}.svg" width="132" height="132" ` +
+        `alt="QR code for ${esc(m.label)}" hidden>`
       : '';
     if (m.copy) {
-      return `<div class="method"><div class="m-head">${esc(m.label)}${badge(m)}</div>` +
+      return `<div class="method wide"><div class="m-head">${esc(m.label)}${badge(m)}</div>` +
         `<code class="addr">${esc(m.display)}</code><div class="row">` +
         `<button type="button" class="btn" data-copy="${esc(m.copy)}">Copy address</button>` +
-        link(m.href, 'Open in wallet', 'btn') + `</div>${qr}</div>`;
+        link(m.href, 'Open in wallet', 'btn') + qrButton + `</div>${qr}</div>`;
     }
     const text = esc(m.label) + (m.display ? ` <span class="handle">${esc(m.display)}</span>` : '') + badge(m);
-    return `<div class="method">${link(m.href, text, 'btn block')}${qr}</div>`;
+    if (m.qr) {
+      return `<div class="method wide"><div class="row tight">${link(m.href, text, 'btn grow')}${qrButton}</div>${qr}</div>`;
+    }
+    return `<div class="method">${link(m.href, text, 'btn block')}</div>`;
   }
 
   function triggerHtml() {
@@ -140,12 +150,10 @@ const CONFIG = __SUPPORT_CONFIG__;
       `<p class="by">by ${esc(CONFIG.brand.name)}</p>` +
       `<p class="pitch">${esc(pitch)}</p>` +
       (CONFIG.brand.pays_for.length ? `<p class="pays">Tips pay for ${esc(listText(CONFIG.brand.pays_for))}.</p>` : '') +
-      primary.map(renderMethod).join('') +
+      (primary.length ? `<div class="methods">${primary.map(renderMethod).join('')}</div>` : '') +
       (rest.length
-        ? (primary.length
-          ? '<button type="button" class="more-toggle" aria-expanded="false" aria-controls="sh-more">More ways to support</button>'
-          : '') +
-          `<div id="sh-more"${primary.length ? ' hidden' : ''}>${rest.map(renderMethod).join('')}</div>`
+        ? (primary.length ? '<h3 class="other">Other ways to support</h3>' : '') +
+          `<div class="methods">${rest.map(renderMethod).join('')}</div>`
         : '') +
       `<p class="fine">${esc(CONFIG.brand.tax_note)} ` +
       `<a href="${esc(base)}support/?from=${encodeURIComponent(toolId)}" target="_blank" rel="noopener">See every way to support</a></p>` +
@@ -156,10 +164,7 @@ const CONFIG = __SUPPORT_CONFIG__;
     panel = $('.panel');
     backdrop = $('.backdrop');
     toast = $('.toast');
-    more = $('#sh-more');
-    moreToggle = $('.more-toggle');
     live = $('.sr');
-    if (!primary.length && more) loadQr(more);
 
     layer.addEventListener('click', onClick);
     toast.addEventListener('mouseenter', pauseFade);
@@ -242,11 +247,16 @@ const CONFIG = __SUPPORT_CONFIG__;
     }
   }
 
-  function loadQr(scope) {
-    scope.querySelectorAll('img[data-src]').forEach((img) => {
+  function toggleQr(btn) {
+    const img = layer.getElementById(btn.getAttribute('aria-controls'));
+    if (!img) return;
+    const show = img.hidden;
+    if (show && img.hasAttribute('data-src')) {
       img.src = img.getAttribute('data-src');
       img.removeAttribute('data-src');
-    });
+    }
+    img.hidden = !show;
+    btn.setAttribute('aria-expanded', String(show));
   }
 
   function copyText(btn) {
@@ -293,12 +303,8 @@ const CONFIG = __SUPPORT_CONFIG__;
     const has = (c) => el.classList.contains(c);
     if (has('trigger')) open();
     else if (has('close')) close();
-    else if (has('more-toggle')) {
-      const show = more.hidden;
-      more.hidden = !show;
-      el.setAttribute('aria-expanded', String(show));
-      if (show) loadQr(more);
-    } else if (el.hasAttribute('data-copy')) copyText(el);
+    else if (has('qr-toggle')) toggleQr(el);
+    else if (el.hasAttribute('data-copy')) copyText(el);
     else if (el.hasAttribute('data-support')) {
       markSupported(store);
       hideToast(true);

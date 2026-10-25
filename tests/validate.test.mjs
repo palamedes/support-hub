@@ -147,6 +147,23 @@ describe('config validation', () => {
     expect(btc.copy).toBe(TEST_BTC);
   });
 
+  it('checks the social icons and the photos', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'images-'));
+    const cfg = good();
+    cfg.brand.social = [{ type: 'myspace', url: 'https://example.com' }, { type: 'github' }];
+    cfg.brand.portrait = 'missing.webp';
+    const msg = joined(check(cfg, { imagesDir: dir }).errors);
+    expect(msg).toMatch(/"myspace" isn't an icon this hub has/);
+    expect(msg).toMatch(/social → github needs a url/);
+    expect(msg).toMatch(/portrait: "missing.webp" isn't in the images folder/);
+  });
+
+  it('keeps the social icons in order with their names', () => {
+    const cfg = good();
+    cfg.brand.social = [{ type: 'github', url: 'https://example.com/gh' }, { type: 'youtube', url: 'https://example.com/yt' }];
+    expect(check(cfg).config.brand.social.map((x) => x.label)).toEqual(['GitHub', 'YouTube']);
+  });
+
   it('warns about a section name it does not know (usually a typo)', () => {
     const cfg = { ...good(), tool: [] };
     expect(joined(check(cfg).warnings)).toMatch(/section called "tool"/);
@@ -160,7 +177,10 @@ describe('config validation', () => {
 
   it('accepts the real config.yml while working (placeholders are only warnings)', () => {
     const { raw } = loadConfigFile(path.join(ROOT, 'config.yml'));
-    const { errors } = validateConfig(raw, { screenshotsDir: path.join(ROOT, 'screenshots') });
+    const { errors } = validateConfig(raw, {
+      screenshotsDir: path.join(ROOT, 'screenshots'),
+      imagesDir: path.join(ROOT, 'images'),
+    });
     expect(errors).toEqual([]);
   });
 
