@@ -339,6 +339,7 @@ function normalizeMethod(type, m, label, { errors, checkText }) {
     case 'github':
       if (!isPlaceholder && !isHttpUrl(value)) errors.push(`${label} → url "${value}" isn't a web address. It should start with https://`);
       method.href = value;
+      if (type === 'paypal') method.qr = value; // PayPal.Me links scan well from a phone
       break;
     case 'venmo':
       method.href = `https://venmo.com/u/${encodeURIComponent(value)}`;

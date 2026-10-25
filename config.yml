@@ -147,8 +147,8 @@ methods:
 
   - type: paypal
     label: PayPal
-    enabled: false   # switched off until you fill it in
-    url: "https://paypal.me/<<YOUR-PAYPAL-ME-NAME>>"
+    enabled: true
+    url: https://paypal.me/palamedes
 
   # Just the username, without the @. The link and QR code are made from it.
   - type: venmo

@@ -164,6 +164,13 @@ describe('config validation', () => {
     expect(check(cfg).config.brand.social.map((x) => x.label)).toEqual(['GitHub', 'YouTube']);
   });
 
+  it('gives PayPal a QR code made from its PayPal.Me link', () => {
+    const cfg = good();
+    cfg.methods.push({ type: 'paypal', url: 'https://example.com/paypal-me' });
+    const paypal = check(cfg).config.methods.find((m) => m.type === 'paypal');
+    expect(paypal.qr).toBe('https://example.com/paypal-me');
+  });
+
   it('warns about a section name it does not know (usually a typo)', () => {
     const cfg = { ...good(), tool: [] };
     expect(joined(check(cfg).warnings)).toMatch(/section called "tool"/);
