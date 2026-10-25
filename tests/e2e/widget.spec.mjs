@@ -340,6 +340,29 @@ test.describe('when things go wrong', () => {
 });
 
 test.describe('the hub site', () => {
+  test('the big Support button on the home page opens the widget panel', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForFunction(() => window.supportHub && window.supportHub.loaded === true);
+    await expect(page.locator('.trigger')).toHaveCount(0); // no corner button on the hub itself
+    await page.locator('main').getByRole('link', { name: 'Support', exact: true }).click();
+    await expect(page.getByRole('dialog', { name: 'Support the tools' })).toBeVisible();
+    await expect(page).toHaveURL(/\/$/);
+  });
+
+  test('on a tool page the button opens the panel for that tool', async ({ page }) => {
+    await page.goto('/tools/test-tool/');
+    await page.waitForFunction(() => window.supportHub && window.supportHub.loaded === true);
+    await page.locator('main').getByRole('link', { name: 'Support', exact: true }).click();
+    await expect(page.getByRole('dialog', { name: 'Support Test Tool' })).toBeVisible();
+  });
+
+  test('if the widget can\'t load, the Support button goes to the support page', async ({ page }) => {
+    await page.route('**/widget.js', (route) => route.abort());
+    await page.goto('/');
+    await page.locator('main').getByRole('link', { name: 'Support', exact: true }).click();
+    await expect(page).toHaveURL(/\/support\/$/);
+  });
+
   test('?from= thanks the visitor for that tool and tags the Stripe links', async ({ page }) => {
     await page.goto('/support/?from=test-tool');
     await expect(page.locator('#from-note')).toHaveText('Glad Test Tool worked!');

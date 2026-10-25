@@ -1,7 +1,17 @@
-// The hub's only script. It makes the copy buttons work and, when a visitor
-// arrives with ?from=<tool-id>, thanks them for that tool and tags the Stripe
-// links so the payment records which tool the tip came from.
+// The hub's only script. It makes the copy buttons work, opens the Support
+// widget from the big Support buttons and, when a visitor arrives with
+// ?from=<tool-id>, thanks them for that tool and tags the Stripe links so the
+// payment records which tool the tip came from.
 (function () {
+  // The big Support button opens the widget panel when the widget has loaded;
+  // otherwise it stays a plain link to the support page.
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('[data-open-support]');
+    if (!link || !window.supportHub || !window.supportHub.loaded) return;
+    e.preventDefault();
+    window.supportHub('open');
+  });
+
   document.addEventListener('click', function (e) {
     var btn = e.target.closest && e.target.closest('[data-copy]');
     if (!btn) return;

@@ -142,7 +142,7 @@ export async function build({
   const pages = [
     homePage(cfg),
     supportPage(cfg, qr),
-    ...cfg.tools.filter((t) => t.page).map((t) => toolPage(cfg, t, qr)),
+    ...cfg.tools.filter((t) => t.page).map((t) => toolPage(cfg, t)),
     thanksPage(cfg),
     demoPage(cfg),
     notFoundPage(cfg),

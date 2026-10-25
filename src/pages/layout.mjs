@@ -8,9 +8,11 @@ import { socialIcons } from './icons.mjs';
  * @param {object} cfg - the checked config
  * @param {{title: string, description: string, path: string, body: string,
  *          section?: string, hero?: string, heading?: string,
- *          noindex?: boolean, script?: string, data?: object}} page
+ *          noindex?: boolean, script?: string, data?: object,
+ *          widget?: {tool?: string}}} page
  *   `hero` replaces the page-title band (the home page uses it); `heading`
- *   is the title shown in that band.
+ *   is the title shown in that band. `widget` loads the Support widget with no
+ *   corner button, for the page's big Support button to open.
  */
 export function layout(cfg, page) {
   const { site, brand } = cfg;
@@ -80,7 +82,9 @@ ${page.body}
     </div>
   </div>
 </footer>
-</body>
+${page.widget ? `<script>window.supportHub=window.supportHub||function(){(supportHub.q=supportHub.q||[]).push(arguments)}</script>
+<script async src="/widget.js" data-position="none"${page.widget.tool ? ` data-tool="${esc(page.widget.tool)}"` : ''}></script>
+` : ''}</body>
 </html>
 `;
 }

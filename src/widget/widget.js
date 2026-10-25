@@ -130,7 +130,7 @@ const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="current
   function build() {
     const primary = CONFIG.methods.filter((m) => m.primary);
     const rest = CONFIG.methods.filter((m) => !m.primary);
-    const name = tool ? tool.name : CONFIG.brand.name;
+    const title = tool ? 'Support ' + tool.name : 'Support the tools';
     const pitch = (tool && tool.thanks_text) || CONFIG.brand.pitch;
     const corner = /^(top|bottom)-(left|right)$/.test(position) ? position : 'bottom-right';
     const useCorner = !mountSelector && position !== 'none';
@@ -149,7 +149,7 @@ const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="current
       '<div class="backdrop" hidden>' +
       '<div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-title" tabindex="-1">' +
       '<button type="button" class="x close" aria-label="Close">&times;</button>' +
-      `<h2 id="sh-title">Support ${esc(name)}</h2>` +
+      `<h2 id="sh-title">${esc(title)}</h2>` +
       `<p class="by">by ${esc(CONFIG.brand.name)}</p>` +
       `<p class="pitch">${esc(pitch)}</p>` +
       (CONFIG.brand.pays_for.length ? `<p class="pays">Tips pay for ${esc(listText(CONFIG.brand.pays_for))}.</p>` : '') +

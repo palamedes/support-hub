@@ -2,6 +2,7 @@
 
 import { tagStripeUrl } from '../../scripts/lib/config.mjs';
 import { paymentIcon } from './payment-icons.mjs';
+import { icon } from './icons.mjs';
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -62,9 +63,9 @@ export function methodsHtml(methods, { toolId = null, qr = null } = {}) {
 }
 
 /** Every way to support: the primary methods first, then the others. */
-export function supportOptions(cfg, { toolId = null, qr = null, primaryOnly = false } = {}) {
+export function supportOptions(cfg, { toolId = null, qr = null } = {}) {
   const primary = cfg.methods.filter((m) => m.primary);
-  const rest = primaryOnly ? [] : cfg.methods.filter((m) => !m.primary);
+  const rest = cfg.methods.filter((m) => !m.primary);
   let html = primary.length ? `<div class="methods">${methodsHtml(primary, { toolId, qr })}</div>` : '';
   if (rest.length) {
     html += (primary.length ? '<h3 class="other-ways">Other ways to support</h3>' : '') +
@@ -83,6 +84,17 @@ export function screenshot(tool, cls = 'shot') {
   if (!tool.screenshot) return '';
   return `<div class="${cls}"><img src="/screenshots/${esc(tool.screenshot)}" ` +
     `alt="Screenshot of ${esc(tool.name)}" loading="lazy" decoding="async"></div>`;
+}
+
+/**
+ * The big Support button. It opens the same widget panel the tools use (the
+ * page loads the widget for it); if the widget can't load, it's an ordinary
+ * link to the support page.
+ */
+export function supportButton(toolId) {
+  const href = toolId ? `/support/?from=${encodeURIComponent(toolId)}` : '/support/';
+  return `<p class="support-cta"><a class="btn pay big-support" href="${href}" data-open-support>` +
+    `${icon('heart')}Support</a></p>`;
 }
 
 /** A section heading with the short blue rule under it. */

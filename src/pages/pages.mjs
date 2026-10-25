@@ -1,7 +1,7 @@
 // Every page on the hub. Each function returns { path, file, html }.
 
 import { layout } from './layout.mjs';
-import { esc, heading, paysFor, screenshot, supportOptions } from './parts.mjs';
+import { esc, heading, paysFor, screenshot, supportButton, supportOptions } from './parts.mjs';
 
 const toolData = (cfg) => ({
   tools: Object.fromEntries(cfg.tools.map((t) => [t.id, { name: t.name, thanks_text: t.thanks_text }])),
@@ -51,9 +51,8 @@ export function homePage(cfg) {
   <div class="card-panel">
     <p>${esc(brand.pitch)}</p>
     ${paysFor(cfg)}
-    ${supportOptions(cfg, { primaryOnly: true })}
+    ${supportButton(null)}
   </div>
-  <div class="view-more"><a href="/support/">See every way to support</a></div>
 </section>`;
   return {
     path: '/',
@@ -65,6 +64,8 @@ export function homePage(cfg) {
       path: '/',
       hero: homeHero(cfg),
       body,
+      script: '/hub.js',
+      widget: {},
     }),
   };
 }
@@ -93,7 +94,7 @@ export function supportPage(cfg, qr) {
   };
 }
 
-export function toolPage(cfg, tool, qr) {
+export function toolPage(cfg, tool) {
   const body = `
 <p class="crumbs"><a href="/#tools">All tools</a></p>
 <div class="card-panel">
@@ -107,8 +108,7 @@ export function toolPage(cfg, tool, qr) {
   <div class="card-panel">
     <p>${esc(tool.thanks_text || cfg.brand.pitch)}</p>
     ${paysFor(cfg)}
-    ${supportOptions(cfg, { toolId: tool.id, qr })}
-    <p class="fine">${esc(cfg.brand.tax_note)}</p>
+    ${supportButton(tool.id)}
   </div>
 </section>`;
   return {
@@ -121,6 +121,7 @@ export function toolPage(cfg, tool, qr) {
       path: `/tools/${tool.id}/`,
       body,
       script: '/hub.js',
+      widget: { tool: tool.id },
     }),
   };
 }

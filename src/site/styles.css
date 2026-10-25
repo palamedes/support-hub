@@ -172,12 +172,6 @@ main { padding-bottom: 2.5rem; }
 .card-excerpt { margin: 0 0 .75rem; color: var(--muted); line-height: 1.5; }
 .card-links { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin: 0; font-size: .9rem; }
 .shot { aspect-ratio: 16 / 9; margin: 0 0 1rem; background: #0b0b0b; }
-.view-more { margin: 1.5rem 0; text-align: center; }
-.view-more a, main .view-more a {
-  display: inline-block; padding: .5rem 2rem; border: 1px solid #ccc; border-radius: 3px;
-  background: var(--card); color: var(--muted); font-size: .85rem; text-decoration: none;
-}
-.view-more a:hover { border-color: var(--blue); color: var(--blue); }
 
 /* ── Support options ────────────────────────────────── */
 .pays { color: var(--muted); }
@@ -216,6 +210,9 @@ main { padding-bottom: 2.5rem; }
 }
 .fine { margin: 1.25rem 0 0; color: var(--muted); font-size: .85rem; }
 .demo-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0 .5rem; }
+.support-cta { margin: 1.25rem 0 .25rem; text-align: center; }
+.btn.big-support { gap: .6rem; min-width: 220px; min-height: 54px; padding: .7rem 2.5rem; font-size: 1.15rem; }
+.big-support svg { width: 22px; height: 22px; fill: currentColor; }
 
 /* ── Footer ─────────────────────────────────────────── */
 footer { border-top: 6px solid #2673da; }
