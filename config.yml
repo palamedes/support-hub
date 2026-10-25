@@ -115,7 +115,7 @@ methods:
   # Monthly amounts must be fixed: Stripe can't do "choose your own" monthly.
   - type: stripe
     label: Card, Apple Pay or Google Pay
-    enabled: false   # switched off until you fill it in
+    enabled: true
     primary: true
     one_time:
       - amount: 3
@@ -129,9 +129,9 @@ methods:
       - amount: 3
         url: https://buy.stripe.com/bJe4gA1sn1Beb2E9PpaIM04
       - amount: 5
-        url: "<<STRIPE-LINK-MONTHLY-5>>"
+        url: https://buy.stripe.com/9B64gA1sna7K9YAgdNaIM05
       - amount: 10
-        url: "<<STRIPE-LINK-MONTHLY-10>>"
+        url: https://buy.stripe.com/fZu7sMgnh1BefiU9PpaIM06
 
   - type: kofi
     label: Ko-fi

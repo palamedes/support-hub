@@ -20,7 +20,7 @@ function stripeBlock(m, toolId) {
   const s = m.stripe;
   const amount = (r, suffix) =>
     out(tagStripeUrl(r.url, toolId), `$${esc(r.amount)}${suffix}`, 'btn pay', ' data-stripe');
-  let html = `<div class="method wide"><h3 class="m-head">${paymentIcon(m.type)}${esc(m.label)}${badge(m)}</h3>`;
+  let html = `<div class="method wide stripe"><h3 class="m-head">${paymentIcon(m.type)}${esc(m.label)}${badge(m)}</h3>`;
   if (s.one_time.length || s.choose_your_own_url) {
     html += '<div class="row"><span class="row-label">One-time</span>' +
       s.one_time.map((r) => amount(r, '')).join('') +

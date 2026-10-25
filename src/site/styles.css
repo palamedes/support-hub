@@ -179,6 +179,8 @@ main { padding-bottom: 2.5rem; }
 .methods { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .6rem .8rem; max-width: 720px; }
 .method { margin: 0; }
 .method.wide { grid-column: 1 / -1; }
+/* A line under the card amounts, so Ko-fi and Patreon don't read as part of the Monthly row. */
+.method.stripe:not(:last-child) { padding-bottom: 1rem; margin-bottom: .6rem; border-bottom: 1px solid var(--card-line); }
 .m-head { display: flex; align-items: center; gap: .45rem; margin: 0 0 .4rem; font-size: 1rem; }
 /* Brand logos on the methods. --c is the brand color; --cd a lighter one for dark mode. */
 .m-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--c); }
@@ -218,7 +220,7 @@ main { padding-bottom: 2.5rem; }
 .support-page .method.wide { flex-basis: 100%; }
 .support-page .m-head, .support-page .row, .support-page .with-qr { justify-content: center; }
 .support-page .with-qr .m-main { flex: 0 1 460px; }
-.support-page .from-note { display: inline-block; }
+.support-page .from-note:not([hidden]) { display: inline-block; }
 .demo-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0 .5rem; }
 .support-cta { margin: 1.25rem 0 .25rem; text-align: center; }
 .btn.big-support { gap: .6rem; min-width: 220px; min-height: 54px; padding: .7rem 2.5rem; font-size: 1.15rem; }

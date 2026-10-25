@@ -77,7 +77,7 @@ const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="current
   function renderMethod(m) {
     if (m.type === 'stripe') {
       const s = m.stripe;
-      let html = `<div class="method wide"><div class="m-head">${m.icon}${esc(m.label)}${badge(m)}</div>`;
+      let html = `<div class="method wide stripe"><div class="m-head">${m.icon}${esc(m.label)}${badge(m)}</div>`;
       if (s.one_time.length || s.choose_your_own_url) {
         html += `<div class="row"><span class="row-label">One-time</span>${amounts(s.one_time, '')}` +
           (s.choose_your_own_url
