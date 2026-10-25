@@ -199,11 +199,13 @@ main { padding-bottom: 2.5rem; }
   display: block; padding: .5rem .7rem; border-radius: 3px; background: var(--soft);
   font: .8rem/1.4 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; word-break: break-all;
 }
-.with-qr { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .75rem 1.25rem; }
+.with-qr { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; }
 .with-qr .m-main { flex: 1 1 260px; max-width: 460px; }
+@media (max-width: 520px) {
+  .with-qr .qr { margin-inline: auto; } /* when it wraps under its button, center it */
+}
 .qr { margin: 0; }
 .qr svg, .qr img { display: block; width: 165px; height: 165px; padding: 6px; border-radius: 4px; background: #fff; }
-.qr figcaption { color: var(--muted); font-size: .8rem; }
 .ph {
   margin-left: 4px; padding: 1px 7px; border-radius: 999px;
   background: var(--badge-bg); color: var(--badge-fg); font-size: .72rem; font-weight: 700;

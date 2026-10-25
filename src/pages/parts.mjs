@@ -45,7 +45,7 @@ export function methodsHtml(methods, { toolId = null, qr = null } = {}) {
   return methods.map((m) => {
     if (m.type === 'stripe') return stripeBlock(m, toolId);
     const qrHtml = qr && qr[m.type]
-      ? `<figure class="qr">${qr[m.type]}<figcaption>Scan with your phone</figcaption></figure>`
+      ? `<figure class="qr">${qr[m.type]}</figure>`
       : '';
     // A QR code sits beside its method, so the grid stays even.
     const wrap = (main) => (qrHtml
