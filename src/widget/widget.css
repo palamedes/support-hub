@@ -129,7 +129,7 @@ h2 { margin: 0 36px 0 0; font-size: 19px; line-height: 1.3; }
   background: rgba(10, 10, 14, .55);
 }
 .qr-dialog {
-  position: relative; width: min(320px, 100%); padding: 22px 20px 18px; text-align: center;
+  position: relative; width: min(380px, 100%); padding: 22px 20px 18px; text-align: center;
   border-top: 5px solid #2673da; border-radius: 6px;
   background: var(--sh-bg); color: var(--sh-fg); box-shadow: var(--sh-shadow);
   animation: sh-in .18s ease-out;
@@ -137,7 +137,7 @@ h2 { margin: 0 36px 0 0; font-size: 19px; line-height: 1.3; }
 .qr-dialog:focus { outline: none; }
 .qr-dialog h3 { margin: 0 32px 12px; font-size: 16px; }
 .qr-big {
-  display: block; width: 240px; height: 240px; max-width: 100%; margin: 0 auto;
+  display: block; width: 300px; height: 300px; max-width: 100%; height: auto; aspect-ratio: 1; margin: 0 auto;
   padding: 8px; border-radius: 6px; background: #fff;
 }
 .qr-hint { margin: 10px 0 0; color: var(--sh-muted); font-size: 13px; }

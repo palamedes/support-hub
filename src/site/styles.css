@@ -208,7 +208,7 @@ main { padding-bottom: 2.5rem; }
 .with-qr { display: flex; flex-wrap: wrap; align-items: flex-start; gap: .75rem 1.25rem; }
 .with-qr .m-main { flex: 1 1 260px; max-width: 460px; }
 .qr { margin: 0; }
-.qr svg, .qr img { display: block; width: 132px; height: 132px; padding: 6px; border-radius: 4px; background: #fff; }
+.qr svg, .qr img { display: block; width: 165px; height: 165px; padding: 6px; border-radius: 4px; background: #fff; }
 .qr figcaption { color: var(--muted); font-size: .8rem; }
 .ph {
   margin-left: 4px; padding: 1px 7px; border-radius: 999px;

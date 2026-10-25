@@ -122,7 +122,7 @@ export async function build({
   const qr = {};
   for (const m of cfg.methods.filter((x) => x.qr_image)) {
     write(dist, m.qr_path, fs.readFileSync(path.join(ROOT, 'images', m.qr_image)));
-    qr[m.type] = `<img src="/${m.qr_path}" width="132" height="132" alt="QR code for ${m.label}" loading="lazy">`;
+    qr[m.type] = `<img src="/${m.qr_path}" width="165" height="165" alt="QR code for ${m.label}" loading="lazy">`;
   }
   for (const m of cfg.methods.filter((x) => x.qr && !x.qr_image)) {
     const svg = await QRCode.toString(m.qr, {

@@ -164,7 +164,7 @@ const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="current
       '<div class="qr-backdrop" hidden>' +
       '<div class="qr-dialog" role="dialog" aria-modal="true" aria-labelledby="sh-qr-title" tabindex="-1">' +
       '<button type="button" class="x qr-close" aria-label="Close the QR code">&times;</button>' +
-      '<h3 id="sh-qr-title"></h3><img class="qr-big" width="240" height="240" alt="">' +
+      '<h3 id="sh-qr-title"></h3><img class="qr-big" width="300" height="300" alt="">' +
       '<p class="qr-hint">Point your phone\'s camera at the code.</p></div></div>';
     layer.appendChild(wrap);
 
