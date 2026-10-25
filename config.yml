@@ -119,7 +119,7 @@ methods:
     primary: true
     one_time:
       - amount: 3
-        url: "<<STRIPE-LINK-ONE-TIME-3>>"
+        url: https://buy.stripe.com/6oU5kE2wr1Be4Eg7HhaIM00
       - amount: 5
         url: "<<STRIPE-LINK-ONE-TIME-5>>"
       - amount: 10
