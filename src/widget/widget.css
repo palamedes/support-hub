@@ -13,6 +13,7 @@
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
+  :host(:not([data-theme=light])) .m-icon { color: var(--cd, var(--c)); }
   :host(:not([data-theme=light])) {
     --sh-bg: #202027;
     --sh-fg: #ececf1;
@@ -24,6 +25,7 @@
     color-scheme: dark;
   }
 }
+:host([data-theme=dark]) .m-icon { color: var(--cd, var(--c)); }
 :host([data-theme=dark]) {
   --sh-bg: #202027;
   --sh-fg: #ececf1;
@@ -97,6 +99,9 @@ h2 { margin: 0 36px 0 0; font-size: 19px; line-height: 1.3; }
 .method.wide { grid-column: 1 / -1; }
 .other { margin: 18px 0 0; font-size: 14px; color: var(--sh-muted); font-weight: 700; }
 .m-head { margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+/* Brand logos on the methods. --c is the brand color; --cd a lighter one for dark mode. */
+.m-icon { width: 17px; height: 17px; flex-shrink: 0; color: var(--c); }
+.m-head { display: flex; align-items: center; gap: 6px; }
 .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 5px; }
 .row.tight { margin-top: 0; flex-wrap: nowrap; }
 .row-label { width: 64px; color: var(--sh-muted); font-size: 12px; }

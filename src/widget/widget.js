@@ -72,7 +72,7 @@ const CONFIG = __SUPPORT_CONFIG__;
   function renderMethod(m) {
     if (m.type === 'stripe') {
       const s = m.stripe;
-      let html = `<div class="method wide"><div class="m-head">${esc(m.label)}${badge(m)}</div>`;
+      let html = `<div class="method wide"><div class="m-head">${m.icon}${esc(m.label)}${badge(m)}</div>`;
       if (s.one_time.length || s.choose_your_own_url) {
         html += `<div class="row"><span class="row-label">One-time</span>${amounts(s.one_time, '')}` +
           (s.choose_your_own_url
@@ -95,12 +95,12 @@ const CONFIG = __SUPPORT_CONFIG__;
         `alt="QR code for ${esc(m.label)}" hidden>`
       : '';
     if (m.copy) {
-      return `<div class="method wide"><div class="m-head">${esc(m.label)}${badge(m)}</div>` +
+      return `<div class="method wide"><div class="m-head">${m.icon}${esc(m.label)}${badge(m)}</div>` +
         `<code class="addr">${esc(m.display)}</code><div class="row">` +
         `<button type="button" class="btn" data-copy="${esc(m.copy)}">Copy address</button>` +
         link(m.href, 'Open in wallet', 'btn') + qrButton + `</div>${qr}</div>`;
     }
-    const text = esc(m.label) + (m.display ? ` <span class="handle">${esc(m.display)}</span>` : '') + badge(m);
+    const text = m.icon + esc(m.label) + (m.display ? ` <span class="handle">${esc(m.display)}</span>` : '') + badge(m);
     if (m.qr) {
       return `<div class="method wide"><div class="row tight">${link(m.href, text, 'btn grow')}${qrButton}</div>${qr}</div>`;
     }

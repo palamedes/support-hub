@@ -116,6 +116,9 @@ test.describe('the panel', () => {
     await expect(dialog.getByText('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4')).toBeVisible();
     await expect(dialog.getByText('tips@example.com')).toBeVisible();
     await expect(dialog.getByRole('button', { name: /More ways/ })).toHaveCount(0);
+    // each method carries its logo, so people can see where a link goes
+    await expect(dialog.getByRole('link', { name: 'Ko-fi' }).locator('svg.m-icon')).toHaveCount(1);
+    await expect(dialog.locator('.method', { hasText: 'Bitcoin' }).first().locator('svg.m-icon')).toHaveCount(1);
   });
 
   test('a QR code opens by keyboard, and only then loads, from the hub', async ({ page }) => {

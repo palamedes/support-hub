@@ -1,6 +1,7 @@
 // Small pieces shared by the hub's pages.
 
 import { tagStripeUrl } from '../../scripts/lib/config.mjs';
+import { paymentIcon } from './payment-icons.mjs';
 
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -18,7 +19,7 @@ function stripeBlock(m, toolId) {
   const s = m.stripe;
   const amount = (r, suffix) =>
     out(tagStripeUrl(r.url, toolId), `$${esc(r.amount)}${suffix}`, 'btn pay', ' data-stripe');
-  let html = `<div class="method wide"><h3 class="m-head">${esc(m.label)}${badge(m)}</h3>`;
+  let html = `<div class="method wide"><h3 class="m-head">${paymentIcon(m.type)}${esc(m.label)}${badge(m)}</h3>`;
   if (s.one_time.length || s.choose_your_own_url) {
     html += '<div class="row"><span class="row-label">One-time</span>' +
       s.one_time.map((r) => amount(r, '')).join('') +
@@ -50,12 +51,12 @@ export function methodsHtml(methods, { toolId = null, qr = null } = {}) {
       ? `<div class="method wide with-qr"><div class="m-main">${main}</div>${qrHtml}</div>`
       : `<div class="method${m.copy ? ' wide' : ''}">${main}</div>`);
     if (m.copy) {
-      return wrap(`<h3 class="m-head">${esc(m.label)}${badge(m)}</h3>` +
+      return wrap(`<h3 class="m-head">${paymentIcon(m.type)}${esc(m.label)}${badge(m)}</h3>` +
         `<code class="addr">${esc(m.display)}</code><div class="row">` +
         `<button type="button" class="btn" data-copy="${esc(m.copy)}">Copy address</button>` +
         out(m.href, 'Open in wallet', 'btn') + '</div>');
     }
-    const text = `${esc(m.label)}${m.display ? ` <span class="handle">${esc(m.display)}</span>` : ''}${badge(m)}`;
+    const text = `${paymentIcon(m.type)}${esc(m.label)}${m.display ? ` <span class="handle">${esc(m.display)}</span>` : ''}${badge(m)}`;
     return wrap(out(m.href, text, 'btn block'));
   }).join('\n');
 }

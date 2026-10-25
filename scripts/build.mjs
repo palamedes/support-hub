@@ -12,6 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { build as esbuild, transform } from 'esbuild';
 import QRCode from 'qrcode';
 import { loadConfigFile, validateConfig } from './lib/config.mjs';
+import { paymentIcon } from '../src/pages/payment-icons.mjs';
 import {
   homePage, supportPage, toolPage, thanksPage, demoPage, notFoundPage,
 } from '../src/pages/pages.mjs';
@@ -43,6 +44,7 @@ export function widgetConfig(cfg) {
       display: m.display,
       copy: m.copy,
       qr: Boolean(m.qr),
+      icon: paymentIcon(m.type), // only switched-on methods reach here, so only their logos ship
       ...(m.stripe ? { stripe: m.stripe } : {}),
     })),
   };

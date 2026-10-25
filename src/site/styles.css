@@ -31,6 +31,7 @@
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .m-icon { color: var(--cd, var(--c)); }
   :root:not([data-theme="light"]) {
     --bg: #18181b;
     --card: #222226;
@@ -47,6 +48,7 @@
     color-scheme: dark;
   }
 }
+:root[data-theme="dark"] .m-icon { color: var(--cd, var(--c)); }
 :root[data-theme="dark"] {
   --bg: #18181b;
   --card: #222226;
@@ -183,7 +185,9 @@ main { padding-bottom: 2.5rem; }
 .methods { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .6rem .8rem; max-width: 720px; }
 .method { margin: 0; }
 .method.wide { grid-column: 1 / -1; }
-.m-head { margin: 0 0 .4rem; font-size: 1rem; }
+.m-head { display: flex; align-items: center; gap: .45rem; margin: 0 0 .4rem; font-size: 1rem; }
+/* Brand logos on the methods. --c is the brand color; --cd a lighter one for dark mode. */
+.m-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--c); }
 .other-ways { margin: 1.75rem 0 .75rem; font-size: 1.05rem; }
 .row { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: .35rem; }
 .row-label { width: 72px; color: var(--muted); font-size: .85rem; }
