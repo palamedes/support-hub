@@ -180,21 +180,21 @@ main { padding-bottom: 2.5rem; }
 /* ── Support options ────────────────────────────────── */
 .pays { color: var(--muted); }
 .from-note { padding: .6rem 1rem; border-left: 4px solid var(--blue); background: var(--soft); }
-.methods { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: .75rem 1rem; max-width: 720px; }
+.methods { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: .6rem .8rem; max-width: 720px; }
 .method { margin: 0; }
 .method.wide { grid-column: 1 / -1; }
 .m-head { margin: 0 0 .4rem; font-size: 1rem; }
 .other-ways { margin: 1.75rem 0 .75rem; font-size: 1.05rem; }
-.row { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .4rem; }
-.row-label { width: 80px; color: var(--muted); font-size: .9rem; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: .35rem; }
+.row-label { width: 72px; color: var(--muted); font-size: .85rem; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
-  min-height: 40px; padding: .45rem 1.1rem; border: 1px solid #ccc; border-radius: 3px;
-  background: var(--card); color: var(--fg); font: inherit; font-size: .9rem; font-weight: 600;
+  min-height: 36px; padding: .3rem .85rem; border: 1px solid #ccc; border-radius: 3px;
+  background: var(--card); color: var(--fg); font: inherit; font-size: .85rem; font-weight: 600;
   text-decoration: none; cursor: pointer;
 }
 .btn:hover { border-color: var(--blue); color: var(--blue); }
-.btn.pay { border-color: var(--blue-dark); background: var(--blue-dark); color: #fff; }
+.btn.pay { min-width: 48px; border-color: var(--blue-dark); background: var(--blue-dark); color: #fff; }
 .btn.pay:hover { background: #164a94; border-color: #164a94; color: #fff; }
 .btn.block { width: 100%; }
 .handle { font-weight: 400; color: var(--muted); }

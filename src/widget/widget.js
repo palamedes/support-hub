@@ -62,8 +62,8 @@ const CONFIG = __SUPPORT_CONFIG__;
   }
 
   const badge = (m) => m.placeholder ? ' <span class="ph">placeholder</span>' : '';
-  const link = (href, text, cls) =>
-    `<a class="${cls}" href="${esc(href)}" target="_blank" rel="noopener" data-support>${text}</a>`;
+  const link = (href, text, cls, extra = '') =>
+    `<a class="${cls}" href="${esc(href)}" target="_blank" rel="noopener" data-support${extra}>${text}</a>`;
 
   function amounts(rows, suffix) {
     return rows.map((r) => link(tagStripe(r.url), '$' + esc(r.amount) + suffix, 'btn pay')).join('');
@@ -75,7 +75,9 @@ const CONFIG = __SUPPORT_CONFIG__;
       let html = `<div class="method wide"><div class="m-head">${esc(m.label)}${badge(m)}</div>`;
       if (s.one_time.length || s.choose_your_own_url) {
         html += `<div class="row"><span class="row-label">One-time</span>${amounts(s.one_time, '')}` +
-          (s.choose_your_own_url ? link(tagStripe(s.choose_your_own_url), 'Other amount', 'btn') : '') + '</div>';
+          (s.choose_your_own_url
+            ? link(tagStripe(s.choose_your_own_url), 'Other', 'btn pay', ' aria-label="Other amount"')
+            : '') + '</div>';
       }
       if (s.monthly.length) {
         html += `<div class="row"><span class="row-label">Monthly</span>${amounts(s.monthly, '/mo')}</div>`;

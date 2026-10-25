@@ -23,7 +23,7 @@ function stripeBlock(m, toolId) {
     html += '<div class="row"><span class="row-label">One-time</span>' +
       s.one_time.map((r) => amount(r, '')).join('') +
       (s.choose_your_own_url
-        ? out(tagStripeUrl(s.choose_your_own_url, toolId), 'Other amount', 'btn', ' data-stripe')
+        ? out(tagStripeUrl(s.choose_your_own_url, toolId), 'Other', 'btn pay', ' data-stripe aria-label="Other amount"')
         : '') + '</div>';
   }
   if (s.monthly.length) {
