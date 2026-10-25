@@ -1,0 +1,23 @@
+{
+  "name": "support-hub",
+  "private": true,
+  "description": "One support hub and a tiny embeddable Support button for all of Jason Ellis's free tools.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:prod": "node scripts/build.mjs --production",
+    "dev": "node scripts/serve.mjs --watch",
+    "check": "node scripts/build.mjs --production --check",
+    "test": "vitest run",
+    "test:e2e": "node scripts/build.mjs --config tests/fixtures/config.yml --out dist-test && playwright test",
+    "test:all": "npm test && npm run test:e2e"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "esbuild": "0.28.2",
+    "qrcode": "1.5.4",
+    "vitest": "5.0.3",
+    "yaml": "2.9.1"
+  }
+}

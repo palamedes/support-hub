@@ -1,0 +1,54 @@
+# A fixed config for the browser tests, so editing the real config.yml can
+# never break them. Every link here is a clearly fake example.com address.
+
+site:
+  url: https://tools.example.com
+  title: Test Hub
+
+brand:
+  name: Test Maker
+  also_known_as: [Tester]
+  intro: A config used only by the tests.
+  pitch: These tools are free. You can leave a tip.
+  pays_for: [hosting, new tools]
+  tax_note: Tips aren't tax-deductible.
+
+thanks:
+  enabled: true
+  interval_days: 30
+  fade_seconds: 10
+  message: Glad it worked! If this tool helped, you can leave a tip.
+
+tools:
+  - id: test-tool
+    name: Test Tool
+    description: A pretend tool.
+    url: https://example.com/test-tool
+    page: true
+    thanks_text: Glad Test Tool worked!
+
+methods:
+  - type: stripe
+    label: Card
+    primary: true
+    one_time:
+      - amount: 5
+        url: https://example.com/stripe/one-time-5
+    choose_your_own_url: https://example.com/stripe/choose
+    monthly:
+      - amount: 5
+        url: https://example.com/stripe/monthly-5
+  - type: kofi
+    label: Ko-fi
+    primary: true
+    url: https://example.com/kofi
+  - type: venmo
+    label: Venmo
+    handle: example-user
+  - type: bitcoin
+    label: Bitcoin
+    # The P2WPKH test vector from BIP 173, not anyone's wallet.
+    address: bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4
+  - type: lightning
+    label: Lightning
+    address: tips@example.com

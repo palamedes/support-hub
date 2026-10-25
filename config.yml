@@ -1,0 +1,154 @@
+# ─────────────────────────────────────────────────────────────────────────
+#  config.yml: the ONE file you edit.
+#
+#  Everything on the hub site and in the Support widget comes from here:
+#  who you are, your tools, the ways people can support you, and the wording.
+#  Change something, push it, and every site that uses the widget picks it up
+#  within about 10 minutes.
+#
+#  Placeholders look like <<THIS>>. Replace each one with the real value, or
+#  switch that method off with `enabled: false`.
+#    npm run build      → warns about placeholders and shows them with a badge
+#    npm run build:prod → refuses to build while an enabled method still has
+#                         one (this is what GitHub runs when you push)
+#
+#  Lines starting with # are comments and are ignored.
+# ─────────────────────────────────────────────────────────────────────────
+
+site:
+  # The hub's address, with no slash at the end.
+  url: https://tools.randomstringofwords.com
+  title: Tools by Jason Ellis
+  # Optional, cookie-free visit counter. Off by default. Paste the snippet your
+  # counter gives you (for example GoatCounter or Cloudflare Web Analytics)
+  # between the quotes. It goes on the hub's pages only, never in the widget.
+  analytics_snippet: ""
+
+brand:
+  name: Jason Ellis
+  also_known_as: [Palamedes, Toiletduck]
+  # The short intro at the top of the hub's home page.
+  intro: >-
+    I've been writing code for more than 40 years, and I make small, free
+    tools for problems I run into myself. They stay free: no ads, no
+    watermarks, nothing locked.
+  about_url: https://randomstringofwords.com/about/
+  # The line people see next to the support options.
+  pitch: >-
+    These tools are free and always will be. If one saved you time, you can
+    leave a tip. It keeps them running and pays for the next one.
+  # Shown as "Tips pay for hosting, new features and new tools."
+  pays_for: [hosting, new features, new tools]
+  # The small print on the support page. Tips aren't donations.
+  tax_note: >-
+    Tips go to me personally. I'm not a charity, so tips aren't
+    tax-deductible.
+
+# The "thank-you moment": a one-line note a tool can show after something
+# works (for example after an export). It never blocks anything, fades on its
+# own, can be dismissed, and never shows to someone who has already tipped or
+# who clicked "Don't show again".
+thanks:
+  enabled: true
+  interval_days: 30   # at most once per this many days, per tool
+  fade_seconds: 12    # how long it stays before fading out
+  message: Glad it worked! If this tool helped, you can leave a tip.
+
+# ── Your tools ───────────────────────────────────────────────────────────
+#  id:          short, permanent name used in the widget's script tag and
+#               in Stripe (lowercase letters, numbers and dashes). Don't
+#               change it once a tool uses it; change `name` instead.
+#  name:        what people see. Rename freely.
+#  url:         where people open or download the tool.
+#  screenshot:  an image in the screenshots/ folder (optional).
+#  page:        true gives the tool its own page at /tools/<id>/.
+#  thanks_text: optional wording for this tool's support panel and
+#               thank-you note.
+tools:
+  - id: coin-depth-mapper
+    name: Relief Depth Studio
+    description: >-
+      Turns a picture of a coin, medallion or relief into a smooth depth map
+      for 3D deep-relief laser engraving. Runs on your own computer.
+    url: https://github.com/palamedes/coin-depth-mapper
+    screenshot: coin-depth-mapper.webp
+    page: true
+    thanks_text: >-
+      Glad the depth map came out! If Relief Depth Studio saved you some
+      time, you can leave a tip.
+
+# ── Ways to support ──────────────────────────────────────────────────────
+#  Listed in the order they appear. `primary: true` shows a method up front;
+#  the rest sit behind "More ways to support". Keep it to two or three
+#  primary methods so nobody faces a wall of buttons.
+#  `enabled: false` hides a method everywhere. Every method below that still
+#  has a placeholder starts switched off: fill it in, then set enabled: true.
+methods:
+  # Card, Apple Pay and Google Pay. See "Stripe Payment Links" in README.md.
+  # Monthly amounts must be fixed: Stripe can't do "choose your own" monthly.
+  - type: stripe
+    label: Card, Apple Pay or Google Pay
+    enabled: false   # switched off until you fill it in
+    primary: true
+    one_time:
+      - amount: 3
+        url: "<<STRIPE-LINK-ONE-TIME-3>>"
+      - amount: 5
+        url: "<<STRIPE-LINK-ONE-TIME-5>>"
+      - amount: 10
+        url: "<<STRIPE-LINK-ONE-TIME-10>>"
+    choose_your_own_url: "<<STRIPE-LINK-CHOOSE-YOUR-OWN>>"
+    monthly:
+      - amount: 3
+        url: "<<STRIPE-LINK-MONTHLY-3>>"
+      - amount: 5
+        url: "<<STRIPE-LINK-MONTHLY-5>>"
+      - amount: 10
+        url: "<<STRIPE-LINK-MONTHLY-10>>"
+
+  - type: kofi
+    label: Ko-fi
+    enabled: false   # switched off until you fill it in
+    primary: true
+    url: "https://ko-fi.com/<<YOUR-KOFI-NAME>>"
+
+  - type: patreon
+    label: Patreon
+    enabled: true
+    primary: true
+    url: https://www.patreon.com/palamedes
+
+  - type: paypal
+    label: PayPal
+    enabled: false   # switched off until you fill it in
+    url: "https://paypal.me/<<YOUR-PAYPAL-ME-NAME>>"
+
+  # Just the username, without the @. The link and QR code are made from it.
+  - type: venmo
+    label: Venmo
+    enabled: false   # switched off until you fill it in
+    handle: "<<YOUR-VENMO-USERNAME>>"
+
+  # Just the cashtag, without the $.
+  - type: cashapp
+    label: Cash App
+    enabled: false   # switched off until you fill it in
+    handle: "<<YOUR-CASHTAG>>"
+
+  # An on-chain address you control. Never paste a private key or seed
+  # phrase anywhere in this file. Read the Bitcoin note in README.md.
+  - type: bitcoin
+    label: Bitcoin
+    enabled: false   # switched off until you fill it in
+    address: "<<YOUR-BITCOIN-ADDRESS>>"
+
+  # A Lightning address looks like an email address: name@provider.com
+  - type: lightning
+    label: Bitcoin Lightning
+    enabled: false   # switched off until you fill it in
+    address: "<<YOU@YOUR-LIGHTNING-PROVIDER>>"
+
+  - type: github
+    label: GitHub Sponsors
+    enabled: false
+    url: https://github.com/sponsors/palamedes
