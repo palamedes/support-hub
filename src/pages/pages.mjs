@@ -60,7 +60,7 @@ export function homePage(cfg) {
     html: layout(cfg, {
       title: cfg.site.title,
       section: 'Home',
-      description: `Free tools by ${brand.name}, with no ads, watermarks or locked features, and an optional way to leave a tip.`,
+      description: `Free tools by ${brand.name}, with no watermarks or locked features, and an optional way to leave a tip.`,
       path: '/',
       hero: homeHero(cfg),
       body,

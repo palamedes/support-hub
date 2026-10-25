@@ -33,8 +33,8 @@ brand:
   # The short intro at the top of the hub's home page.
   intro: >-
     I've been writing code for more than 40 years, and I make small, free
-    tools for problems I run into myself. They stay free: no ads, no
-    watermarks, nothing locked.
+    tools for problems I run into myself. They stay free, with no
+    watermarks and nothing locked.
   about_url: https://randomstringofwords.com/about/
   blog_url: https://randomstringofwords.com/
   # Photos from the images/ folder: the portrait at the top of the home page
@@ -103,6 +103,18 @@ tools:
     thanks_text: >-
       Glad the depth map came out! If Relief Depth Studio saved you some
       time, you can leave a tip.
+
+  - id: digthru
+    name: Dig Through the Earth
+    description: >-
+      Drop a pin anywhere on Earth, dig straight through the center of the
+      planet, and see where you'd come out on the other side.
+    url: https://digthru.to/
+    screenshot: digthru.webp
+    page: true
+    thanks_text: >-
+      Glad you made it through! If digthru.to was worth the dig, you can
+      leave a tip.
 
 # ── Ways to support ──────────────────────────────────────────────────────
 #  Listed in the order they appear. `primary: true` puts a method in the top
