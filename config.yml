@@ -135,9 +135,9 @@ methods:
 
   - type: kofi
     label: Ko-fi
-    enabled: false   # switched off until you fill it in
+    enabled: true
     primary: true
-    url: "https://ko-fi.com/<<YOUR-KOFI-NAME>>"
+    url: https://ko-fi.com/toiletduck
 
   - type: patreon
     label: Patreon
