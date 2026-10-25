@@ -73,11 +73,11 @@ brand:
 
 # The "thank-you moment": a one-line note a tool can show after something
 # works (for example after an export). It never blocks anything, fades on its
-# own, can be dismissed, and never shows to someone who has already tipped or
-# who clicked "Don't show again".
+# own, and × hides it for now. It stops for good once someone clicks
+# "Don't show again" or one of the tip links.
 thanks:
   enabled: true
-  interval_days: 30   # at most once per this many days, per tool
+  interval_days: 0    # 0 = after every success; 30 = at most once a month, per tool
   fade_seconds: 12    # how long it stays before fading out
   message: Glad it worked! If this tool helped, you can leave a tip.
 

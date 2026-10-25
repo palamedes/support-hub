@@ -260,10 +260,12 @@ That may show a one-line note in the corner: "Glad it worked! If this tool
 helped, you can leave a tip." The note:
 
 - never blocks anything, and fades out by itself after a few seconds;
-- can be dismissed with its × button (or Escape, once it has focus);
-- shows at most once every 30 days per tool (`interval_days` in `config.yml`);
-- never shows to someone who has clicked a support option;
-- has a **Don't show again** button that turns it off for good.
+- can be hidden for now with its × button (or Escape, once it has focus);
+- shows after every success, because `interval_days` is `0` in `config.yml`.
+  Set it to, say, `30` to show it at most once a month per tool instead;
+- stops for good once someone clicks **Don't show again**, or clicks one of
+  the tip links;
+- has a wide **Leave a tip** button that opens the support panel.
 
 It remembers all of this in the visitor's browser only (localStorage). If the
 browser blocks storage, it still works, and shows at most once per visit.
@@ -278,7 +280,7 @@ exports successfully.
 
 | Call | What it does |
 | --- | --- |
-| `supportHub('open')` | Opens the panel. |
+| `supportHub('open')` | Opens the panel, in the corner by the Support button. |
 | `supportHub('close')` | Closes it. |
 | `supportHub('thanks')` | Maybe shows the thank-you note (see the rules above). Returns `true` if it showed. |
 | `supportHub('reset')` | Forgets the note's memory in this browser. Handy while testing. |

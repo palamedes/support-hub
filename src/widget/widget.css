@@ -63,16 +63,24 @@ button, a { font: inherit; }
 .top-left > .trigger { left: 16px; top: 16px; }
 
 /* The panel */
+/* The panel opens in the corner, by the button, not in the middle of the page.
+   The see-through backdrop is only there to catch a click outside the panel. */
 .backdrop {
   position: fixed; inset: 0; z-index: 2147483001;
-  display: grid; place-items: center; padding: 16px;
-  background: rgba(10, 10, 14, .42);
+  display: flex; justify-content: flex-end; align-items: flex-end; padding: 16px;
+  background: transparent;
 }
+.bottom-left > .backdrop, .top-left > .backdrop { justify-content: flex-start; }
+.top-right > .backdrop, .top-left > .backdrop { align-items: flex-start; }
+.has-trigger.bottom-right > .backdrop, .has-trigger.bottom-left > .backdrop { padding-bottom: 64px; }
+.has-trigger.top-right > .backdrop, .has-trigger.top-left > .backdrop { padding-top: 64px; }
 .panel {
-  position: relative; width: min(480px, 100%); max-height: calc(100vh - 32px); overflow: auto;
-  padding: 22px 20px 18px; border-radius: 6px; border-top: 5px solid #2673da;
+  position: relative; width: min(430px, 100%); max-height: 100%; overflow: auto;
+  padding: 22px 20px 18px; border: 1px solid var(--sh-line); border-top: 5px solid #2673da; border-radius: 6px;
   background: var(--sh-bg); color: var(--sh-fg); box-shadow: var(--sh-shadow);
+  animation: sh-in .18s ease-out;
 }
+@keyframes sh-in { from { opacity: 0; transform: translateY(8px); } }
 .panel:focus { outline: none; }
 h2 { margin: 0 36px 0 0; font-size: 19px; line-height: 1.3; }
 .by { margin: 2px 0 10px; color: var(--sh-muted); font-size: 13px; }
@@ -133,15 +141,22 @@ h2 { margin: 0 36px 0 0; font-size: 19px; line-height: 1.3; }
 .bottom-left > .toast, .top-left > .toast { right: auto; left: 16px; }
 .toast.out { opacity: 0; transform: translateY(6px); }
 .t-msg { margin: 0; font-size: 14px; }
-.toast .btn { min-height: 34px; padding: 5px 11px; font-size: 13px; }
+.toast .row { flex-wrap: nowrap; gap: 12px; }
+.toast .t-tip { flex: 1; min-height: 38px; font-size: 14px; }
+.t-never {
+  flex-shrink: 0; padding: 4px 2px; border: 0; background: none; cursor: pointer;
+  color: var(--sh-muted); font: inherit; font-size: 12px; text-decoration: underline;
+}
+.t-never:hover { color: var(--sh-fg); }
 .toast .x { top: 6px; right: 6px; width: 30px; height: 30px; font-size: 20px; }
 
 @media (max-width: 480px) {
-  .backdrop { place-items: end center; padding: 0; }
+  .wrap > .backdrop { justify-content: center; align-items: flex-end; padding: 0; background: rgba(10, 10, 14, .3); }
   .panel { width: 100%; max-height: 88vh; border-radius: 6px 6px 0 0; }
   .methods { grid-template-columns: 1fr; }
   .toast { left: 16px; right: 16px; width: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   .toast { transition: none; }
+  .panel { animation: none; }
 }

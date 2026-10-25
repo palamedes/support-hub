@@ -156,8 +156,8 @@ export function validateConfig(raw, opts = {}) {
     fade_seconds: t.fade_seconds ?? 12,
     message: str(t.message) || 'Glad it worked! If this tool helped, you can leave a tip.',
   };
-  if (!(Number.isFinite(thanks.interval_days) && thanks.interval_days >= 1)) {
-    errors.push(`thanks → interval_days should be a number of days, 1 or more (it's "${t.interval_days}").`);
+  if (!(Number.isFinite(thanks.interval_days) && thanks.interval_days >= 0)) {
+    errors.push(`thanks → interval_days should be a number of days: 0 for every time, or more (it's "${t.interval_days}").`);
   }
   if (!(Number.isFinite(thanks.fade_seconds) && thanks.fade_seconds >= 3 && thanks.fade_seconds <= 60)) {
     errors.push(`thanks → fade_seconds should be between 3 and 60 (it's "${t.fade_seconds}").`);

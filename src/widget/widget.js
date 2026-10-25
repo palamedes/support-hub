@@ -141,7 +141,7 @@ const CONFIG = __SUPPORT_CONFIG__;
       `<div class="toast" role="region" aria-label="A note from ${esc(CONFIG.brand.name)}" hidden>` +
       '<p class="t-msg"></p><div class="row">' +
       '<button type="button" class="btn pay t-tip">Leave a tip</button>' +
-      '<button type="button" class="btn t-never">Don\'t show again</button></div>' +
+      '<button type="button" class="t-never">Don\'t show again</button></div>' +
       '<button type="button" class="x t-close" aria-label="Dismiss">&times;</button></div>' +
       '<div class="backdrop" hidden>' +
       '<div class="panel" role="dialog" aria-modal="true" aria-labelledby="sh-title" tabindex="-1">' +

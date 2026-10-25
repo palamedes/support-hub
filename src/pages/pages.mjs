@@ -166,8 +166,10 @@ export function demoPage(cfg) {
 
   <h2>The snippet</h2>
   <pre><code>${esc(snippet)}</code></pre>
-  <p>The thank-you note shows at most once every ${cfg.thanks.interval_days} days per tool, so use
-  <em>Reset</em> to see it again.</p>
+  <p>${cfg.thanks.interval_days
+    ? `The thank-you note shows at most once every ${cfg.thanks.interval_days} days per tool.`
+    : 'The thank-you note shows after every success.'}
+  Once you click <em>Don't show again</em> or a tip link, it stops; use <em>Reset</em> to bring it back.</p>
 </div>
 
 <script>window.supportHub=window.supportHub||function(){(supportHub.q=supportHub.q||[]).push(arguments)}</script>
@@ -178,7 +180,7 @@ export function demoPage(cfg) {
     var shown = supportHub('thanks');
     document.getElementById('demo-result').textContent = shown
       ? 'Shown.'
-      : 'Not shown: it already showed recently, "Don\\'t show again" was clicked, or a support option was clicked. Reset to try again.';
+      : 'Not shown: "Don\\'t show again" or a tip link was clicked${cfg.thanks.interval_days ? ', or it showed recently' : ''}. Reset to try again.';
   };
   document.getElementById('demo-reset').onclick = function () {
     supportHub('reset');

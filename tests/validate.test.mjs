@@ -123,7 +123,7 @@ describe('config validation', () => {
 
   it('checks the thank-you settings', () => {
     const cfg = good();
-    cfg.thanks.interval_days = 0;
+    cfg.thanks.interval_days = -1;
     cfg.thanks.fade_seconds = 500;
     const msg = joined(check(cfg).errors);
     expect(msg).toMatch(/interval_days/);

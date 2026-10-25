@@ -80,6 +80,21 @@ test.describe('the panel', () => {
     expect(errors).toEqual([]);
   });
 
+  test('"Leave a tip" opens the panel in the corner by the button, not mid-page', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await openHost(page, hostPage());
+    await ready(page);
+    await page.click('#tool-button');
+    await page.getByRole('button', { name: 'Leave a tip' }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.waitForTimeout(250); // let the slide-in finish
+    const box = await page.locator('.panel').boundingBox();
+    expect(box.x).toBeGreaterThan(1280 / 2);
+    expect(box.x + box.width).toBeGreaterThan(1280 - 40);
+    expect(box.y + box.height).toBeGreaterThan(900 - 120);
+    await expect(page.getByRole('region', { name: /A note from/ })).toBeHidden();
+  });
+
   test('closes on a click outside it', async ({ page }) => {
     await openHost(page, hostPage());
     await ready(page);

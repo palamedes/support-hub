@@ -38,6 +38,14 @@ describe('thank-you note timing', () => {
     expect(shouldShowThanks(store, 'tool-a', { now: T0 + 7 * DAY, intervalDays: 7 })).toBe(true);
   });
 
+  it('with an interval of 0, shows after every success', () => {
+    const store = createStore(memoryStorage);
+    markThanksShown(store, 'tool-a', T0);
+    expect(shouldShowThanks(store, 'tool-a', { now: T0 + 1, intervalDays: 0 })).toBe(true);
+    markNever(store);
+    expect(shouldShowThanks(store, 'tool-a', { now: T0 + 2, intervalDays: 0 })).toBe(false);
+  });
+
   it('remembers across visits (a new store on the same storage)', () => {
     const storage = memoryStorage();
     markThanksShown(createStore(() => storage), 'tool-a', T0);
