@@ -1,6 +1,6 @@
 // The Support widget. A tool adds it with one script tag:
 //
-//   <script async src="https://tools.randomstringofwords.com/widget.js" data-tool="my-tool"></script>
+//   <script async src="https://jasonellisbuilds.com/widget.js" data-tool="my-tool"></script>
 //
 // It adds a quiet "Support" button and a panel listing the ways to support.
 // Styles live in a Shadow DOM so the widget and the host page can't break

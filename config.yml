@@ -17,8 +17,8 @@
 
 site:
   # The hub's address, with no slash at the end.
-  url: https://tools.randomstringofwords.com
-  title: Tools by Jason Ellis
+  url: https://jasonellisbuilds.com
+  title: Jason Ellis Builds
   # Optional, cookie-free visit counter. Off by default. Paste the snippet your
   # counter gives you (for example GoatCounter or Cloudflare Web Analytics)
   # between the quotes. It goes on the hub's pages only, never in the widget.

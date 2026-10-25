@@ -3,7 +3,7 @@
 One place for all of my free tools, and one quiet **Support** button that any
 of them can add. It has two parts:
 
-1. **The hub website** at <https://tools.randomstringofwords.com>. It lists
+1. **The hub website** at <https://jasonellisbuilds.com>. It lists
    every tool and every way to leave a tip.
 2. **The widget**, a single small file (`widget.js`, about 6 KB). A tool adds
    it with one script tag, and it puts a small Support button on the page.
@@ -104,7 +104,7 @@ card number.
 2. Choose **Products or subscriptions** and add a product, such as "Tip".
    Give it a **one-time** price of $3.
 3. On the **After payment** tab, choose to redirect customers to your website,
-   and enter `https://tools.randomstringofwords.com/thanks/`
+   and enter `https://jasonellisbuilds.com/thanks/`
 4. Create the link and copy it. It starts with `https://buy.stripe.com/`.
 5. Paste it into `config.yml` under `one_time`, next to `amount: 3`.
 6. Repeat for $5 and $10.
@@ -130,7 +130,7 @@ on. Payment Links show them automatically on phones and browsers that
 support them.
 
 Under **Settings → Public details**, set a statement descriptor people will
-recognize on their card statement, such as `JASON ELLIS TOOLS`.
+recognize on their card statement, such as `JASON ELLIS BUILDS`.
 
 ### Which tool earned the tip
 
@@ -153,14 +153,46 @@ check found a problem, and the log says what it is.
 
 ### One-time setup
 
+The hub lives at **jasonellisbuilds.com**. Four other addresses forward to it:
+www.jasonellisbuilds.com, jasonellisbuilds.net, jasonellisbuilds.org and
+tools.randomstringofwords.com. All four domains are registered at Namecheap.
+
 - **GitHub Pages**: in the repository's **Settings → Pages**, the source is
-  **GitHub Actions** and the custom domain is `tools.randomstringofwords.com`,
-  with **Enforce HTTPS** ticked.
-- **DNS**: the domain's DNS is at Namecheap. In **Domain List → Manage →
-  Advanced DNS**, there's one record:
+  **GitHub Actions** and the custom domain is `jasonellisbuilds.com`, with
+  **Enforce HTTPS** ticked.
+- **jasonellisbuilds.com**: under **Domain List → Manage**, the nameservers are
+  set to **Namecheap BasicDNS**. **Advanced DNS** has these records, and
+  nothing else for `@` or `www`:
 
   | Type | Host | Value |
   | --- | --- | --- |
+  | A | `@` | `185.199.108.153` |
+  | A | `@` | `185.199.109.153` |
+  | A | `@` | `185.199.110.153` |
+  | A | `@` | `185.199.111.153` |
+  | AAAA | `@` | `2606:50c0:8000::153` |
+  | AAAA | `@` | `2606:50c0:8001::153` |
+  | AAAA | `@` | `2606:50c0:8002::153` |
+  | AAAA | `@` | `2606:50c0:8003::153` |
+  | CNAME | `www` | `palamedes.github.io.` |
+
+  GitHub sends `www` on to the bare domain by itself.
+- **jasonellisbuilds.net** and **jasonellisbuilds.org**: in **Advanced DNS**,
+  a **URL Redirect Record** for `@`, set to **Permanent (301)**, pointing to
+  `https://jasonellisbuilds.com/`. Leave their email-forwarding records alone.
+- **tools.randomstringofwords.com**: in randomstringofwords.com's
+  **Advanced DNS**, a **URL Redirect Record** for host `tools`, set to
+  **Permanent (301)**, pointing to `https://jasonellisbuilds.com/`.
+
+After a DNS change, it can take up to an hour for an address to work and for
+GitHub to issue the HTTPS certificate.
+
+Namecheap's redirects only answer plain `http://` addresses. Typing
+`jasonellisbuilds.net` works, because browsers fall back to http when https
+doesn't answer, but a link written as `https://jasonellisbuilds.net` won't. So
+always share jasonellisbuilds.com itself.
+
+--- | --- | --- |
   | CNAME | `tools` | `palamedes.github.io.` |
 
   Once that record is in place, it can take up to an hour for the address to
@@ -175,7 +207,7 @@ Paste these two lines into the tool's page, just before `</body>`. Change
 
 ```html
 <script>window.supportHub=window.supportHub||function(){(supportHub.q=supportHub.q||[]).push(arguments)}</script>
-<script async src="https://tools.randomstringofwords.com/widget.js" data-tool="coin-depth-mapper"></script>
+<script async src="https://jasonellisbuilds.com/widget.js" data-tool="coin-depth-mapper"></script>
 ```
 
 The first line makes `supportHub(...)` safe to call at any moment: before the
@@ -198,7 +230,7 @@ Add any of these to the second `<script>` tag:
 ### Opening the panel from the tool's own link
 
 ```html
-<a href="https://tools.randomstringofwords.com/support/?from=coin-depth-mapper"
+<a href="https://jasonellisbuilds.com/support/?from=coin-depth-mapper"
    target="_blank" rel="noopener"
    onclick="if (window.supportHub && supportHub.loaded) { supportHub('open'); return false; }">
   Support this tool
