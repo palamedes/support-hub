@@ -91,8 +91,8 @@ const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="current
     }
     // A QR code opens big in a pop-up, and its image loads only then.
     const qrButton = m.qr
-      ? `<button type="button" class="btn qr-btn" aria-haspopup="dialog" data-qr="${m.type}" ` +
-        `data-qr-title="${esc(m.label + (m.display && !m.copy ? ' ' + m.display : ''))}" ` +
+      ? `<button type="button" class="btn qr-btn" aria-haspopup="dialog" data-qr="${esc(m.qr)}" ` +
+        `data-qr-title="${esc(m.label)}" ` +
         `aria-label="QR code for ${esc(m.label)}">${QR_ICON}QR code</button>`
       : '';
     if (m.copy) {
@@ -101,7 +101,7 @@ const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="current
         `<button type="button" class="btn" data-copy="${esc(m.copy)}">Copy address</button>` +
         link(m.href, 'Open in wallet', 'btn') + qrButton + '</div></div>';
     }
-    const text = m.icon + esc(m.label) + (m.display ? ` <span class="handle">${esc(m.display)}</span>` : '') + badge(m);
+    const text = m.icon + esc(m.label) + badge(m); // the handle shows on the page the link opens
     if (m.qr) {
       return `<div class="method wide"><div class="row tight">${link(m.href, text, 'btn grow')}${qrButton}</div></div>`;
     }
@@ -269,7 +269,7 @@ const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="current
     const title = btn.getAttribute('data-qr-title');
     qrTitle.textContent = title;
     qrImg.alt = 'QR code for ' + title;
-    qrImg.src = base + 'qr/' + btn.getAttribute('data-qr') + '.svg';
+    qrImg.src = base + btn.getAttribute('data-qr');
     qrFrom = btn;
     qrBackdrop.hidden = false;
     qrDialog.focus();

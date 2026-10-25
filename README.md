@@ -70,6 +70,11 @@ site; refresh the browser to see the change.
     under "Other ways to support". Both the widget and the support page show
     every method; two or three primary ones keeps the top group easy to scan.
   - `enabled: false` hides a method everywhere.
+  - `qr_image: paypal-qr.png` uses your own QR picture from the `images/`
+    folder (like the one PayPal gives you) instead of the one the hub makes.
+    Scan it with your phone first: some apps' share codes are generic
+    "download the app" links that can't pay you. Cash App's was, so Cash App
+    uses the hub's own code, which opens `cash.app/$jasonellis72` directly.
 
 **Placeholders** look like `<<YOUR-KOFI-NAME>>`. Every method that still has
 one starts switched off. To turn one on:

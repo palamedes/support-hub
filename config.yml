@@ -149,6 +149,9 @@ methods:
     label: PayPal
     enabled: true
     url: https://paypal.me/palamedes
+    # Your own QR picture from images/, shown instead of a made-up one. Leave
+    # it out and the hub makes a QR code from the link above.
+    qr_image: paypal-qr.png
 
   # Just the username, without the @. The link and QR code are made from it.
   - type: venmo
@@ -159,8 +162,8 @@ methods:
   # Just the cashtag, without the $.
   - type: cashapp
     label: Cash App
-    enabled: false   # switched off until you fill it in
-    handle: "<<YOUR-CASHTAG>>"
+    enabled: true
+    handle: jasonellis72
 
   # An on-chain address you control. Never paste a private key or seed
   # phrase anywhere in this file. Read the Bitcoin note in README.md.

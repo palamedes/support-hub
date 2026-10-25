@@ -56,7 +56,7 @@ export function methodsHtml(methods, { toolId = null, qr = null } = {}) {
         `<button type="button" class="btn" data-copy="${esc(m.copy)}">Copy address</button>` +
         out(m.href, 'Open in wallet', 'btn') + '</div>');
     }
-    const text = `${paymentIcon(m.type)}${esc(m.label)}${m.display ? ` <span class="handle">${esc(m.display)}</span>` : ''}${badge(m)}`;
+    const text = `${paymentIcon(m.type)}${esc(m.label)}${badge(m)}`; // the handle shows on the page the link opens
     return wrap(out(m.href, text, 'btn block'));
   }).join('\n');
 }

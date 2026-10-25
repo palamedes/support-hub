@@ -227,7 +227,7 @@ export function validateConfig(raw, opts = {}) {
       }
       seenTypes.add(type);
       if (m.enabled === false) return; // switched off: ignore it entirely, placeholders and all
-      const method = normalizeMethod(type, m, label, { errors, checkText });
+      const method = normalizeMethod(type, m, label, { errors, checkText, imagesDir: opts.imagesDir });
       if (method) methods.push(method);
     });
     const primary = methods.filter((m) => m.primary).length;
@@ -271,7 +271,7 @@ export function validateConfig(raw, opts = {}) {
   };
 }
 
-function normalizeMethod(type, m, label, { errors, checkText }) {
+function normalizeMethod(type, m, label, { errors, checkText, imagesDir }) {
   const method = {
     type,
     label: str(m.label) || type,
@@ -281,6 +281,8 @@ function normalizeMethod(type, m, label, { errors, checkText }) {
     display: null,
     copy: null,
     qr: null,
+    qr_image: null, // your own QR picture from images/, used instead of a generated one
+    qr_path: null, // where the QR ends up on the hub, e.g. qr/venmo.svg
   };
   const markPlaceholder = (where, value) => {
     if (typeof value === 'string' && PLACEHOLDER.test(value)) {
@@ -370,6 +372,16 @@ function normalizeMethod(type, m, label, { errors, checkText }) {
       method.qr = `lightning:${value}`;
       break;
   }
+
+  const qrImage = str(m.qr_image);
+  if (qrImage) {
+    if (imagesDir && !fs.existsSync(path.join(imagesDir, qrImage))) {
+      errors.push(`${label} → qr_image: "${qrImage}" isn't in the images folder. Check the file name, or remove the line.`);
+    }
+    method.qr_image = qrImage;
+  }
+  if (method.qr_image) method.qr_path = `qr/${type}${path.extname(method.qr_image).toLowerCase()}`;
+  else if (method.qr) method.qr_path = `qr/${type}.svg`;
   return method;
 }
 

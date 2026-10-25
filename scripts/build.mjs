@@ -43,7 +43,7 @@ export function widgetConfig(cfg) {
       href: m.href,
       display: m.display,
       copy: m.copy,
-      qr: Boolean(m.qr),
+      qr: m.qr_path,
       icon: paymentIcon(m.type), // only switched-on methods reach here, so only their logos ship
       ...(m.stripe ? { stripe: m.stripe } : {}),
     })),
@@ -117,9 +117,14 @@ export async function build({
   fs.rmSync(dist, { recursive: true, force: true });
   fs.mkdirSync(dist, { recursive: true });
 
-  // QR codes, made here so visitors' browsers never need a QR library.
+  // QR codes: your own picture when config.yml names one (qr_image), otherwise
+  // made here, so visitors' browsers never need a QR library.
   const qr = {};
-  for (const m of cfg.methods.filter((x) => x.qr)) {
+  for (const m of cfg.methods.filter((x) => x.qr_image)) {
+    write(dist, m.qr_path, fs.readFileSync(path.join(ROOT, 'images', m.qr_image)));
+    qr[m.type] = `<img src="/${m.qr_path}" width="132" height="132" alt="QR code for ${m.label}" loading="lazy">`;
+  }
+  for (const m of cfg.methods.filter((x) => x.qr && !x.qr_image)) {
     const svg = await QRCode.toString(m.qr, {
       type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#000000', light: '#ffffff' },
     });

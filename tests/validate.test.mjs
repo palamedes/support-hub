@@ -164,6 +164,18 @@ describe('config validation', () => {
     expect(check(cfg).config.brand.social.map((x) => x.label)).toEqual(['GitHub', 'YouTube']);
   });
 
+  it('uses your own QR picture when one is named, and checks it exists', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'images-'));
+    fs.writeFileSync(path.join(dir, 'paypal-qr.png'), 'png');
+    const cfg = good();
+    cfg.methods.push({ type: 'paypal', url: 'https://example.com/paypal-me', qr_image: 'paypal-qr.png' });
+    const { config } = check(cfg, { imagesDir: dir });
+    expect(config.methods.find((m) => m.type === 'paypal').qr_path).toBe('qr/paypal.png');
+    expect(config.methods.find((m) => m.type === 'venmo').qr_path).toBe('qr/venmo.svg'); // made by the hub
+    cfg.methods[cfg.methods.length - 1].qr_image = 'nope.png';
+    expect(joined(check(cfg, { imagesDir: dir }).errors)).toMatch(/qr_image: "nope.png" isn't in the images folder/);
+  });
+
   it('gives PayPal a QR code made from its PayPal.Me link', () => {
     const cfg = good();
     cfg.methods.push({ type: 'paypal', url: 'https://example.com/paypal-me' });

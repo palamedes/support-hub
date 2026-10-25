@@ -134,9 +134,9 @@ test.describe('the panel', () => {
     await expect(button.locator('svg')).toHaveCount(1); // the little QR glyph
     await button.focus();
     await page.keyboard.press('Enter');
-    const popup = page.getByRole('dialog', { name: 'Venmo @example-user' });
+    const popup = page.getByRole('dialog', { name: 'Venmo' });
     await expect(popup).toBeVisible();
-    await expect(popup.getByRole('img', { name: 'QR code for Venmo @example-user' })).toBeVisible();
+    await expect(popup.getByRole('img', { name: 'QR code for Venmo' })).toBeVisible();
     expect(requests).toContain(`${ORIGIN}/qr/venmo.svg`);
     expect(requests.some((u) => u.includes('/qr/bitcoin.svg'))).toBe(false); // only the one asked for
     expect(requests.every((u) => u.startsWith(ORIGIN + '/'))).toBe(true);
