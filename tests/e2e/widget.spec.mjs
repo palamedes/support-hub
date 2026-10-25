@@ -121,26 +121,56 @@ test.describe('the panel', () => {
     await expect(dialog.locator('.method', { hasText: 'Bitcoin' }).first().locator('svg.m-icon')).toHaveCount(1);
   });
 
-  test('a QR code opens by keyboard, and only then loads, from the hub', async ({ page }) => {
+  test('a QR code opens big in a centered pop-up, by keyboard, and loads only then, from the hub', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
     const requests = [];
     page.on('request', (r) => requests.push(r.url()));
     await openHost(page, hostPage());
     await ready(page);
     await page.evaluate(() => supportHub('open'));
     expect(requests.some((u) => u.includes('/qr/'))).toBe(false);
-    await expect(page.getByRole('img', { name: 'QR code for Venmo' })).toBeHidden();
 
-    const toggle = page.getByRole('button', { name: 'QR code for Venmo' });
-    await toggle.focus();
+    const button = page.getByRole('button', { name: 'QR code for Venmo' });
+    await expect(button.locator('svg')).toHaveCount(1); // the little QR glyph
+    await button.focus();
     await page.keyboard.press('Enter');
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    await expect(page.getByRole('img', { name: 'QR code for Venmo' })).toBeVisible();
-    expect(requests.some((u) => u === `${ORIGIN}/qr/venmo.svg`)).toBe(true);
+    const popup = page.getByRole('dialog', { name: 'Venmo @example-user' });
+    await expect(popup).toBeVisible();
+    await expect(popup.getByRole('img', { name: 'QR code for Venmo @example-user' })).toBeVisible();
+    expect(requests).toContain(`${ORIGIN}/qr/venmo.svg`);
     expect(requests.some((u) => u.includes('/qr/bitcoin.svg'))).toBe(false); // only the one asked for
     expect(requests.every((u) => u.startsWith(ORIGIN + '/'))).toBe(true);
 
-    await page.keyboard.press('Enter');
-    await expect(page.getByRole('img', { name: 'QR code for Venmo' })).toBeHidden();
+    await page.waitForTimeout(250); // let the pop-in finish
+    const box = await page.locator('.qr-dialog').boundingBox();
+    expect(Math.abs(box.x + box.width / 2 - 640)).toBeLessThan(20);
+    expect(Math.abs(box.y + box.height / 2 - 450)).toBeLessThan(40);
+
+    // Tab stays inside the pop-up; Escape closes only the pop-up and returns to the button.
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press('Tab');
+      expect(await page.evaluate(() => {
+        let el = document.activeElement;
+        while (el && el.shadowRoot && el.shadowRoot.activeElement) el = el.shadowRoot.activeElement;
+        return Boolean(el.closest('.qr-dialog'));
+      })).toBe(true);
+    }
+    await page.keyboard.press('Escape');
+    await expect(popup).toBeHidden();
+    await expect(page.getByRole('dialog', { name: 'Support Test Tool' })).toBeVisible();
+    await expect(button).toBeFocused();
+  });
+
+  test('a click outside the QR pop-up closes just the pop-up', async ({ page }) => {
+    await openHost(page, hostPage());
+    await ready(page);
+    await page.evaluate(() => supportHub('open'));
+    await page.getByRole('button', { name: 'QR code for Bitcoin' }).click();
+    const popup = page.getByRole('dialog', { name: 'Bitcoin' });
+    await expect(popup).toBeVisible();
+    await page.mouse.click(5, 5);
+    await expect(popup).toBeHidden();
+    await expect(page.getByRole('dialog', { name: 'Support Test Tool' })).toBeVisible();
   });
 
   test('tags Stripe links with the tool so the payment records where it came from', async ({ page }) => {
@@ -296,8 +326,11 @@ test.describe('when things go wrong', () => {
     await openHost(page, hostPage());
     await ready(page);
     await page.evaluate(() => supportHub('open'));
-    for (const toggle of await page.locator('.qr-toggle').all()) await toggle.click();
-    await expect(page.getByRole('img', { name: 'QR code for Bitcoin' })).toBeVisible();
+    for (const button of await page.locator('.qr-btn').all()) {
+      await button.click();
+      await expect(page.locator('.qr-dialog')).toBeVisible();
+      await page.keyboard.press('Escape');
+    }
     await page.keyboard.press('Escape');
     await page.click('#tool-button');
     await expect(page.getByRole('region', { name: /A note from/ })).toBeVisible();

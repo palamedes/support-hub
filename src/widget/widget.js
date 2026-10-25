@@ -16,6 +16,10 @@ import {
 /* global __SUPPORT_CONFIG__ */
 const CONFIG = __SUPPORT_CONFIG__;
 
+// The little QR glyph on the "QR code" buttons.
+const QR_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 ' +
+  '2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm8-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>';
+
 (function () {
   const existing = window.supportHub;
   if (existing && existing.loaded) return; // the script was included twice
@@ -35,7 +39,8 @@ const CONFIG = __SUPPORT_CONFIG__;
   const store = createStore(() => window.localStorage);
 
   let layer; // shadow root for the panel and the note
-  let panel, backdrop, toast, live;
+  let panel, backdrop, toast, live, qrBackdrop, qrDialog, qrImg, qrTitle;
+  let qrFrom = null; // the QR button that opened the QR pop-up
   let isOpen = false;
   let lastFocus = null;
   let fadeTimer = 0;
@@ -84,25 +89,21 @@ const CONFIG = __SUPPORT_CONFIG__;
       }
       return html + '</div>';
     }
-    // QR codes stay out of the way behind a button, and load only when asked.
-    const qrId = 'sh-qr-' + m.type;
+    // A QR code opens big in a pop-up, and its image loads only then.
     const qrButton = m.qr
-      ? `<button type="button" class="btn qr-toggle" aria-expanded="false" aria-controls="${qrId}" ` +
-        `aria-label="QR code for ${esc(m.label)}">QR code</button>`
-      : '';
-    const qr = m.qr
-      ? `<img id="${qrId}" class="qr" data-src="${esc(base)}qr/${m.type}.svg" width="132" height="132" ` +
-        `alt="QR code for ${esc(m.label)}" hidden>`
+      ? `<button type="button" class="btn qr-btn" aria-haspopup="dialog" data-qr="${m.type}" ` +
+        `data-qr-title="${esc(m.label + (m.display && !m.copy ? ' ' + m.display : ''))}" ` +
+        `aria-label="QR code for ${esc(m.label)}">${QR_ICON}QR code</button>`
       : '';
     if (m.copy) {
       return `<div class="method wide"><div class="m-head">${m.icon}${esc(m.label)}${badge(m)}</div>` +
         `<code class="addr">${esc(m.display)}</code><div class="row">` +
         `<button type="button" class="btn" data-copy="${esc(m.copy)}">Copy address</button>` +
-        link(m.href, 'Open in wallet', 'btn') + qrButton + `</div>${qr}</div>`;
+        link(m.href, 'Open in wallet', 'btn') + qrButton + '</div></div>';
     }
     const text = m.icon + esc(m.label) + (m.display ? ` <span class="handle">${esc(m.display)}</span>` : '') + badge(m);
     if (m.qr) {
-      return `<div class="method wide"><div class="row tight">${link(m.href, text, 'btn grow')}${qrButton}</div>${qr}</div>`;
+      return `<div class="method wide"><div class="row tight">${link(m.href, text, 'btn grow')}${qrButton}</div></div>`;
     }
     return `<div class="method">${link(m.href, text, 'btn block')}</div>`;
   }
@@ -159,7 +160,12 @@ const CONFIG = __SUPPORT_CONFIG__;
         : '') +
       `<p class="fine">${esc(CONFIG.brand.tax_note)} ` +
       `<a href="${esc(base)}support/?from=${encodeURIComponent(toolId)}" target="_blank" rel="noopener">See every way to support</a></p>` +
-      '</div></div>';
+      '</div></div>' +
+      '<div class="qr-backdrop" hidden>' +
+      '<div class="qr-dialog" role="dialog" aria-modal="true" aria-labelledby="sh-qr-title" tabindex="-1">' +
+      '<button type="button" class="x qr-close" aria-label="Close the QR code">&times;</button>' +
+      '<h3 id="sh-qr-title"></h3><img class="qr-big" width="240" height="240" alt="">' +
+      '<p class="qr-hint">Point your phone\'s camera at the code.</p></div></div>';
     layer.appendChild(wrap);
 
     const $ = (sel) => layer.querySelector(sel);
@@ -167,6 +173,10 @@ const CONFIG = __SUPPORT_CONFIG__;
     backdrop = $('.backdrop');
     toast = $('.toast');
     live = $('.sr');
+    qrBackdrop = $('.qr-backdrop');
+    qrDialog = $('.qr-dialog');
+    qrImg = $('.qr-big');
+    qrTitle = $('#sh-qr-title');
 
     layer.addEventListener('click', onClick);
     toast.addEventListener('mouseenter', pauseFade);
@@ -197,9 +207,9 @@ const CONFIG = __SUPPORT_CONFIG__;
     return el;
   }
 
-  function focusables() {
+  function focusables(box) {
     return Array.prototype.filter.call(
-      panel.querySelectorAll('a[href], button:not([disabled])'),
+      box.querySelectorAll('a[href], button:not([disabled])'),
       (el) => !el.closest('[hidden]'),
     );
   }
@@ -216,6 +226,7 @@ const CONFIG = __SUPPORT_CONFIG__;
 
   function close() {
     if (!isOpen) return;
+    closeQr(false);
     backdrop.hidden = true;
     isOpen = false;
     document.removeEventListener('keydown', onKey, true);
@@ -225,22 +236,27 @@ const CONFIG = __SUPPORT_CONFIG__;
 
   function onKey(e) {
     if (!isOpen) return;
+    const box = qrBackdrop.hidden ? panel : qrDialog; // the QR pop-up sits on top of the panel
     if (e.key === 'Escape') {
       e.preventDefault();
       e.stopPropagation();
-      close();
+      if (box === qrDialog) closeQr(true);
+      else close();
       return;
     }
     if (e.key !== 'Tab') return;
-    const items = focusables();
+    const items = focusables(box);
     if (!items.length) return;
     const first = items[0];
     const last = items[items.length - 1];
     const active = layer.activeElement;
-    if (!active || !panel.contains(active)) {
+    if (!active || !box.contains(active)) {
       e.preventDefault();
       (e.shiftKey ? last : first).focus();
-    } else if (e.shiftKey && (active === first || active === panel)) {
+    } else if (items.length === 1) {
+      e.preventDefault();
+      first.focus();
+    } else if (e.shiftKey && (active === first || active === box)) {
       e.preventDefault();
       last.focus();
     } else if (!e.shiftKey && active === last) {
@@ -249,16 +265,21 @@ const CONFIG = __SUPPORT_CONFIG__;
     }
   }
 
-  function toggleQr(btn) {
-    const img = layer.getElementById(btn.getAttribute('aria-controls'));
-    if (!img) return;
-    const show = img.hidden;
-    if (show && img.hasAttribute('data-src')) {
-      img.src = img.getAttribute('data-src');
-      img.removeAttribute('data-src');
-    }
-    img.hidden = !show;
-    btn.setAttribute('aria-expanded', String(show));
+  function openQr(btn) {
+    const title = btn.getAttribute('data-qr-title');
+    qrTitle.textContent = title;
+    qrImg.alt = 'QR code for ' + title;
+    qrImg.src = base + 'qr/' + btn.getAttribute('data-qr') + '.svg';
+    qrFrom = btn;
+    qrBackdrop.hidden = false;
+    qrDialog.focus();
+  }
+
+  function closeQr(returnFocus) {
+    if (!qrBackdrop || qrBackdrop.hidden) return;
+    qrBackdrop.hidden = true;
+    if (returnFocus && qrFrom) qrFrom.focus();
+    qrFrom = null;
   }
 
   function copyText(btn) {
@@ -299,13 +320,15 @@ const CONFIG = __SUPPORT_CONFIG__;
 
   function onClick(e) {
     const t = e.target;
+    if (t === qrBackdrop) return closeQr(true);
     if (t === backdrop) return close();
     const el = t.closest ? t.closest('button, a') : null;
     if (!el) return;
     const has = (c) => el.classList.contains(c);
     if (has('trigger')) open();
     else if (has('close')) close();
-    else if (has('qr-toggle')) toggleQr(el);
+    else if (has('qr-btn')) openQr(el);
+    else if (has('qr-close')) closeQr(true);
     else if (el.hasAttribute('data-copy')) copyText(el);
     else if (el.hasAttribute('data-support')) {
       markSupported(store);
