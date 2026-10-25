@@ -25,7 +25,7 @@ tips aren't tax-deductible.
 - [Publishing the site](#publishing-the-site)
 - [Adding the widget to a tool](#adding-the-widget-to-a-tool)
 - [Adding a new tool to the hub](#adding-a-new-tool-to-the-hub)
-- [Before you switch on PayPal, Venmo, Cash App or Bitcoin](#before-you-switch-on-paypal-venmo-cash-app-or-bitcoin)
+- [Before you switch on PayPal, Venmo, Cash App or crypto](#before-you-switch-on-paypal-venmo-cash-app-or-crypto)
 - [Privacy](#privacy)
 - [Tests](#tests)
 - [What's in this folder](#whats-in-this-folder)
@@ -101,6 +101,7 @@ That's on purpose, so a `<<PLACEHOLDER>>` can never reach a real visitor.
 | Venmo | Your username, without the @. The link and QR code are made from it. |
 | Cash App | Your cashtag, without the $. |
 | Bitcoin | A receiving address from your wallet (starts with `bc1`, `1` or `3`). |
+| Ethereum | A receiving address from your wallet (starts with `0x`). |
 | Lightning | Your Lightning address, which looks like an email: `name@provider.com` |
 | GitHub Sponsors | `https://github.com/sponsors/palamedes`, once Sponsors is set up |
 
@@ -328,7 +329,7 @@ button simply isn't there and nothing breaks.
 
 ---
 
-## Before you switch on PayPal, Venmo, Cash App or Bitcoin
+## Before you switch on PayPal, Venmo, Cash App or crypto
 
 **PayPal, Venmo and Cash App** each have rules about personal accounts
 receiving money for a business or for goods and services, and tips for tools
@@ -336,9 +337,11 @@ you make can count. Read their current terms and decide whether you need a
 business profile before switching them on. A personal account also shows your
 real name to anyone who pays you.
 
-**Bitcoin**: anyone can look up an on-chain address on the public blockchain.
-If you reuse one address, as this hub does, every tip sent to it is visible
-to anyone who knows the address: amounts, dates and your running total. Giving
+**Bitcoin and Ethereum**: anyone can look up an address on the public
+blockchain. If you reuse one address, as this hub does, every tip sent to it
+is visible to anyone who knows the address: amounts, dates and your running
+total. (An Ethereum address also shows any other tokens or collectibles it
+holds.) Giving
 each person a fresh address would need a server, which this hub deliberately
 doesn't have. Use an address that's only for tips. **Lightning** payments
 don't show up on the public blockchain the same way.

@@ -1,7 +1,7 @@
 // Makes a styled QR code: round dots, rounded corner squares and a brand
 // logo in the middle, in the look the payment apps use for their own codes.
 //
-//   node scripts/styled-qr.mjs <link> <images/out.svg> [logo] [color]
+//   node scripts/styled-qr.mjs <link> <images/out.svg> [logo] [color] [logo color]
 //
 //   node scripts/styled-qr.mjs 'https://cash.app/$jasonellis72' images/cashapp-qr.svg cashapp
 //
@@ -14,7 +14,7 @@ import fs from 'node:fs';
 import QRCode from 'qrcode';
 import { PAYMENT_ICONS } from '../src/pages/payment-icons.mjs';
 
-export function styledQrSvg(text, { logo = null, color = '#000000', margin = 2 } = {}) {
+export function styledQrSvg(text, { logo = null, color = '#000000', logoColor = null, margin = 2 } = {}) {
   const { modules } = QRCode.create(text, { errorCorrectionLevel: 'H' });
   const n = modules.size;
   const full = n + margin * 2;
@@ -47,18 +47,19 @@ export function styledQrSvg(text, { logo = null, color = '#000000', margin = 2 }
     const icon = PAYMENT_ICONS[logo];
     if (!icon) throw new Error(`No logo called "${logo}". Use one of: ${Object.keys(PAYMENT_ICONS).join(', ')}`);
     const scale = hole / 24;
-    parts.push(`<path transform="translate(${lo + margin} ${lo + margin}) scale(${scale})" d="${icon.d}"/>`);
+    const fill = logoColor ? ` fill="${logoColor}"` : '';
+    parts.push(`<path transform="translate(${lo + margin} ${lo + margin}) scale(${scale})"${fill} d="${icon.d}"/>`);
   }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${full} ${full}" shape-rendering="geometricPrecision">` +
     `<rect width="${full}" height="${full}" fill="#ffffff"/><g fill="${color}">${parts.join('')}</g></svg>\n`;
 }
 
 if (process.argv[1] && process.argv[1].endsWith('styled-qr.mjs')) {
-  const [text, out, logo, color] = process.argv.slice(2);
+  const [text, out, logo, color, logoColor] = process.argv.slice(2);
   if (!text || !out) {
     console.error('Usage: node scripts/styled-qr.mjs <link> <images/out.svg> [logo] [color]');
     process.exit(1);
   }
-  fs.writeFileSync(out, styledQrSvg(text, { logo: logo || null, color: color || '#000000' }));
+  fs.writeFileSync(out, styledQrSvg(text, { logo: logo || null, color: color || '#000000', logoColor: logoColor || null }));
   console.log(`Wrote ${out}. Scan it with your phone before using it.`);
 }

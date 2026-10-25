@@ -115,6 +115,16 @@ describe('config validation', () => {
     expect(msg).toMatch(/doesn't look like a Lightning address/);
   });
 
+  it('accepts Ethereum addresses and catches bad ones', () => {
+    const cfg = good();
+    cfg.methods.push({ type: 'ethereum', address: '0x' + 'a'.repeat(40) });
+    const eth = check(cfg).config.methods.find((m) => m.type === 'ethereum');
+    expect(eth.href).toBe('ethereum:0x' + 'a'.repeat(40));
+    expect(eth.qr_path).toBe('qr/ethereum.svg');
+    cfg.methods[cfg.methods.length - 1].address = '0x123';
+    expect(joined(check(cfg).errors)).toMatch(/doesn't look like an Ethereum address/);
+  });
+
   it('warns when too many methods are primary', () => {
     const cfg = good();
     cfg.methods.forEach((m) => { m.primary = true; });

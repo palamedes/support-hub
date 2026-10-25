@@ -168,17 +168,25 @@ methods:
     # it opens cash.app/$jasonellis72.
     qr_image: cashapp-qr.svg
 
-  # An on-chain address you control. Never paste a private key or seed
-  # phrase anywhere in this file. Read the Bitcoin note in README.md.
+  # Receiving addresses you control. Never paste a private key or seed
+  # phrase anywhere in this file. Read the crypto note in README.md.
   - type: bitcoin
     label: Bitcoin
-    enabled: false   # switched off until you fill it in
-    address: "<<YOUR-BITCOIN-ADDRESS>>"
+    enabled: true
+    address: bc1qtpdaaqkutrdxv0p06xy855aw5j2zhmapwjmp7n
+    qr_image: bitcoin-qr.svg
 
-  # A Lightning address looks like an email address: name@provider.com
+  - type: ethereum
+    label: Ethereum
+    enabled: true
+    address: "0xE894F49eb01DB202e39f0Ee16814b1D9aDFe9352"
+    qr_image: ethereum-qr.svg
+
+  # Bitcoin's fast, cheap layer for small payments. Off: it needs a Lightning
+  # wallet, which gives you an address that looks like name@provider.com.
   - type: lightning
     label: Bitcoin Lightning
-    enabled: false   # switched off until you fill it in
+    enabled: false
     address: "<<YOU@YOUR-LIGHTNING-PROVIDER>>"
 
   - type: github

@@ -18,6 +18,7 @@ export const METHOD_TYPES = {
   venmo: { needs: 'handle' },
   cashapp: { needs: 'handle' },
   bitcoin: { needs: 'address' },
+  ethereum: { needs: 'address' },
   lightning: { needs: 'address' },
 };
 
@@ -361,6 +362,15 @@ function normalizeMethod(type, m, label, { errors, checkText, imagesDir }) {
       method.display = value;
       method.copy = value;
       method.qr = `bitcoin:${value}`;
+      break;
+    case 'ethereum':
+      if (!isPlaceholder && !/^0x[0-9a-fA-F]{40}$/.test(value)) {
+        errors.push(`${label} → address "${value}" doesn't look like an Ethereum address (0x followed by 40 letters and numbers).`);
+      }
+      method.href = `ethereum:${value}`;
+      method.display = value;
+      method.copy = value;
+      method.qr = `ethereum:${value}`;
       break;
     case 'lightning':
       if (!isPlaceholder && !/^[a-z0-9._+-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(value)) {
