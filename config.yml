@@ -158,6 +158,8 @@ methods:
     label: Venmo
     enabled: true
     handle: Palamedes
+    # Made with scripts/styled-qr.mjs in Venmo's style; opens venmo.com/u/Palamedes.
+    qr_image: venmo-qr.svg
 
   # Just the cashtag, without the $.
   - type: cashapp

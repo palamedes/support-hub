@@ -47,7 +47,7 @@ export function styledQrSvg(text, { logo = null, color = '#000000', logoColor = 
     const icon = PAYMENT_ICONS[logo];
     if (!icon) throw new Error(`No logo called "${logo}". Use one of: ${Object.keys(PAYMENT_ICONS).join(', ')}`);
     const scale = hole / 24;
-    const fill = logoColor ? ` fill="${logoColor}"` : '';
+    const fill = (logoColor ? ` fill="${logoColor}"` : '') + (icon.evenodd ? ' fill-rule="evenodd"' : '');
     parts.push(`<path transform="translate(${lo + margin} ${lo + margin}) scale(${scale})"${fill} d="${icon.d}"/>`);
   }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${full} ${full}" shape-rendering="geometricPrecision">` +
