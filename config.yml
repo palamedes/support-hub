@@ -164,6 +164,9 @@ methods:
     label: Cash App
     enabled: true
     handle: jasonellis72
+    # Made with scripts/styled-qr.mjs to look like Cash App's own codes;
+    # it opens cash.app/$jasonellis72.
+    qr_image: cashapp-qr.svg
 
   # An on-chain address you control. Never paste a private key or seed
   # phrase anywhere in this file. Read the Bitcoin note in README.md.

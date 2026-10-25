@@ -73,8 +73,13 @@ site; refresh the browser to see the change.
   - `qr_image: paypal-qr.png` uses your own QR picture from the `images/`
     folder (like the one PayPal gives you) instead of the one the hub makes.
     Scan it with your phone first: some apps' share codes are generic
-    "download the app" links that can't pay you. Cash App's was, so Cash App
-    uses the hub's own code, which opens `cash.app/$jasonellis72` directly.
+    "download the app" links that can't pay you. Cash App's was, so its
+    code is made by `scripts/styled-qr.mjs` instead.
+  - To make a code in an app's style (round dots, rounded corners, the logo
+    in the middle):
+    `node scripts/styled-qr.mjs 'https://cash.app/$yourcashtag' images/cashapp-qr.svg cashapp`.
+    The logo can be any method type (`venmo`, `paypal`, ...). Scan it with
+    your phone, then set `qr_image` to it.
 
 **Placeholders** look like `<<YOUR-KOFI-NAME>>`. Every method that still has
 one starts switched off. To turn one on:
