@@ -127,7 +127,7 @@ methods:
     choose_your_own_url: https://buy.stripe.com/aFacN67QL5Ru9YA8LlaIM03
     monthly:
       - amount: 3
-        url: "<<STRIPE-LINK-MONTHLY-3>>"
+        url: https://buy.stripe.com/bJe4gA1sn1Beb2E9PpaIM04
       - amount: 5
         url: "<<STRIPE-LINK-MONTHLY-5>>"
       - amount: 10
