@@ -38,11 +38,12 @@ function homeHero(cfg) {
 
 export function homePage(cfg) {
   const { brand } = cfg;
+  const listed = cfg.tools.filter((t) => t.listed); // `listed: false` sites use the widget but aren't tools
   const body = `
 <section id="tools" aria-labelledby="tools-title">
   ${heading('Tools', 'tools-title')}
-  ${cfg.tools.length
-    ? `<div class="tool-grid">${cfg.tools.map(toolCard).join('\n')}</div>`
+  ${listed.length
+    ? `<div class="tool-grid">${listed.map(toolCard).join('\n')}</div>`
     : '<p>The first tools are on their way.</p>'}
 </section>
 
