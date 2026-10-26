@@ -57,6 +57,15 @@ describe('config validation', () => {
     expect(joined(check(cfg).errors)).toMatch(/lowercase letters, numbers and dashes/);
   });
 
+  it('lists tools by default and keeps listed: false ones off the grid', () => {
+    const cfg = good();
+    cfg.tools.push({ id: 'blog', name: 'My Blog', url: 'https://example.com/blog', listed: false });
+    const { errors, warnings, config } = check(cfg);
+    expect(errors).toEqual([]);
+    expect(config.tools.map((t) => t.listed)).toEqual([true, false]);
+    expect(joined(warnings)).not.toMatch(/"blog" has no description/);
+  });
+
   it('rejects two tools with the same id', () => {
     const cfg = good();
     cfg.tools.push({ ...cfg.tools[0] });

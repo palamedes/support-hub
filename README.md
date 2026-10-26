@@ -327,6 +327,11 @@ button simply isn't there and nothing breaks.
 5. Add [the widget](#adding-the-widget-to-a-tool) to the tool with
    `data-tool="photo-squisher"`.
 
+A site that uses the widget but isn't a tool, like the blog (`id: rsow`), gets
+an entry too, with `listed: false`. That keeps it off the home page's tool
+grid, while the widget and `?from=<id>` still use its `name` and
+`thanks_text`.
+
 ---
 
 ## Before you switch on PayPal, Venmo, Cash App or crypto

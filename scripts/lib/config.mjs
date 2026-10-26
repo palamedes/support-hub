@@ -189,8 +189,9 @@ export function validateConfig(raw, opts = {}) {
       if (!url) errors.push(`${label} has no url: the link people click to open or download the tool.`);
       else if (PLACEHOLDER.test(url)) checkText(`${label} → url`, url);
       else if (!isHttpUrl(url)) errors.push(`${label} → url "${url}" isn't a web address. It should start with https://`);
+      const listed = tool.listed !== false;
       const description = str(tool.description);
-      if (!description) warnings.push(`${label} has no description, so its card will only show the name.`);
+      if (!description && listed) warnings.push(`${label} has no description, so its card will only show the name.`);
       for (const k of ['name', 'description', 'thanks_text']) checkText(`${label} → ${k}`, tool[k]);
       const screenshot = str(tool.screenshot);
       if (screenshot && opts.screenshotsDir && !fs.existsSync(path.join(opts.screenshotsDir, screenshot))) {
@@ -200,6 +201,7 @@ export function validateConfig(raw, opts = {}) {
         id, name, description, url,
         screenshot: screenshot || null,
         page: tool.page === true,
+        listed,
         thanks_text: str(tool.thanks_text) || null,
       });
     });

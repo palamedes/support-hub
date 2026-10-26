@@ -91,6 +91,8 @@ thanks:
 #  page:        true gives the tool its own page at /tools/<id>/.
 #  thanks_text: optional wording for this tool's support panel and
 #               thank-you note.
+#  listed:      false keeps it off the home page's tool grid. For a site
+#               that uses the widget but isn't a tool, like the blog.
 tools:
   - id: coin-depth-mapper
     name: Relief Depth Studio
@@ -115,6 +117,16 @@ tools:
     thanks_text: >-
       Glad you made it through! If digthru.to was worth the dig, you can
       leave a tip.
+
+  # The blog. It uses the widget but isn't a tool, so it gets no card.
+  - id: rsow
+    name: Random String of Words
+    url: https://randomstringofwords.com/
+    listed: false
+    thanks_text: >-
+      No ads, no paywall and no sponsors telling me what to say. If something
+      here made you think, laugh or yell at your screen, you can leave a tip.
+      It keeps the blog running and the opinions coming.
 
 # ── Ways to support ──────────────────────────────────────────────────────
 #  Listed in the order they appear. `primary: true` puts a method in the top
